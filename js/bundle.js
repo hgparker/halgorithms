@@ -16,8 +16,8 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Main.jss is running!");
-  var mazeCanvas = document.getElementById("maze_canvas");
-  var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mazeCanvas);
+  var mainCanvas = document.getElementById("main_canvas");
+  var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mainCanvas);
   maze.draw();
 });
 
