@@ -2,6 +2,61 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./js/control.js":
+/*!***********************!*\
+  !*** ./js/control.js ***!
+  \***********************/
+/*! namespace exports */
+/*! export Control [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Control": () => /* binding */ Control
+/* harmony export */ });
+/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+console.log("control.js is running!"); // Constants for switching
+
+var MAZE = "MAZE"; // Main class used for switching between algorithm pages
+
+var Control = /*#__PURE__*/function () {
+  function Control() {
+    _classCallCheck(this, Control);
+
+    // set initial frame
+    this.currentFrame = MAZE; // run initial frame code
+
+    this.startMaze(); // add event tracking for navbar clicks
+  } //
+
+
+  _createClass(Control, [{
+    key: "switchFrame",
+    value: function switchFrame(event) {} // Start maze frame
+
+  }, {
+    key: "startMaze",
+    value: function startMaze() {
+      var mainCanvas = document.getElementById("main_canvas");
+      var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mainCanvas);
+      maze.draw();
+    }
+  }]);
+
+  return Control;
+}();
+
+/***/ }),
+
 /***/ "./js/main.js":
 /*!********************!*\
   !*** ./js/main.js ***!
@@ -13,12 +68,14 @@
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
+/* harmony import */ var _control__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./control */ "./js/control.js");
+
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Main.jss is running!");
-  var mainCanvas = document.getElementById("main_canvas");
-  var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mainCanvas);
-  maze.draw();
+  var control = new _control__WEBPACK_IMPORTED_MODULE_1__.Control(); // let mainCanvas = document.getElementById("main_canvas");
+  // let maze = new Maze(30, 30, mainCanvas);
+  // maze.draw();
 });
 
 /***/ }),
