@@ -1,13 +1,14 @@
 
 
 // meaning of grid values
-
 const EMPTY = 0;
 const WALL = 1;
+const START = 2;
+const FINISH = 3;
 
-// Edge of canvas, square side, square padding
+// edge of canvas, square side, square padding
 const GRID_OFFSET = 3;
-const SQUARE_SIDE = 15;
+const SQUARE_SIDE = 17;
 const SQUARE_PADDING = 1;
 
 export class Maze {
@@ -17,13 +18,18 @@ export class Maze {
     this.document = canvas;
     this.ctx = canvas.getContext("2d");
 
+    // grid initialization
     let row = [];
     for (let k = 0; k < width; k++)
       row.push(EMPTY);
     this.grid = [];
     for (let k = 0; k < height; k++)
-      this.grid.push(row);
+      this.grid.push(row.slice());
 
+    this.grid[0][0] = START;
+    this.grid[this.width-1][this.height-1] = FINISH;
+
+    // maze building initialization
     this.mazeBuilderOn = true;
     this.mazeBuilderEvents();
   }
@@ -46,6 +52,16 @@ export class Maze {
       case EMPTY:
         this.ctx.fillStyle = "black";
         break;
+      case WALL:
+        this.ctx.fillStyle = "white";
+        break;
+      case START:
+        this.ctx.fillStyle = "green";
+        break;
+      case FINISH:
+        this.ctx.fillStyle = "red";
+        break;
+
     }
     this.ctx.fillRect(GRID_OFFSET + x*SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y*SQUARE_SIDE + SQUARE_PADDING,
       SQUARE_SIDE - 2*SQUARE_PADDING, SQUARE_SIDE - 2*SQUARE_PADDING );
@@ -61,8 +77,17 @@ export class Maze {
   // convert mouse position into grid coordinates
   convertToGrid(x, y) {
     return [Math.floor((x-GRID_OFFSET)/SQUARE_SIDE),
-      Math.floor((x-GRID_OFFSET)/SQUARE_SIDE)
+      Math.floor((y-GRID_OFFSET)/SQUARE_SIDE)
     ];
+  }
+
+  // Flip a square between empty and wall
+
+  flip(x,y) {
+    if (this.grid[x][y] == this.flipTarget) {
+      this.grid[x][y] = this.grid[x][y] == WALL ? EMPTY : WALL
+      this.drawSquare(x,y);        
+    }
   }
 
   // Set up events for maze building
@@ -70,42 +95,44 @@ export class Maze {
   mazeBuilderEvents() {
     this.document.addEventListener('mousedown', e => {
       if (this.mazeBuilderOn) {
-        this.isDrawing = true;
-        this.mbx = e.offsetX;
-        this.mby = e.offsetY;
+        if (this.inGrid(e.offsetX, e.offsetY)) {
+          let pos = this.convertToGrid(e.offsetX, e.offsetY);
+          let [x, y] = pos;
+          if (this.grid[x][y] == EMPTY || this.grid[x][y] == WALL) {
+            this.isBuilding = true;
+            this.flipTarget = this.grid[x][y];
+            this.flip(x,y);  
+          }
+        }
       }
     });
 
+
     this.document.addEventListener('mousemove', e => {
-      if (this.isDrawing) {
-        let x = e.offsetX;
-        let y = e.offsetY;
-        if (this.inGrid(x,y)) {
-          drawLine(this.ctx, this.mbx, this.mby, x, y)
-          this.mbx = x;
-          this.mby = y;
+      if (this.isBuilding) {
+        if (this.inGrid(e.offsetX, e.offsetY)) {
+          let [x, y] = this.convertToGrid(e.offsetX, e.offsetY)
+          this.flip(x, y);
         }
       }
     });
 
     this.document.addEventListener('mouseup', e => {
-      if (this.isDrawing) {
-        this.isDrawing = false;
-        drawLine(this.ctx, this.mbx, this.mby, e.offsetX, e.offsetY);
-        isDrawing = false;
+      if (this.isBuilding) {
+        this.isBuilding = false;
       }
     });
   }
 }
 
-function drawLine(context, x1, y1, x2, y2) {
-  context.beginPath();
-  context.strokeStyle = 'red';
-  context.lineWidth = 1;
-  context.moveTo(x1, y1);
-  context.lineTo(x2, y2);
-  context.stroke();
-  context.closePath();
-}
+// function drawLine(context, x1, y1, x2, y2) {
+//   context.beginPath();
+//   context.strokeStyle = 'red';
+//   context.lineWidth = 1;
+//   context.moveTo(x1, y1);
+//   context.lineTo(x2, y2);
+//   context.stroke();
+//   context.closePath();
+// }
 
 

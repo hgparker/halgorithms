@@ -1,11 +1,3 @@
-/*
- * ATTENTION: The "eval" devtool has been used (maybe by default in mode: "development").
- * This devtool is not neither made for production nor for readable output files.
- * It uses "eval()" calls to create a separate source file in the browser devtools.
- * If you are trying to read the output file, select a different devtool (https://webpack.js.org/configuration/devtool/)
- * or disable the default devtool with "devtool: false".
- * If you are looking for production-ready output files, see mode: "production" (https://webpack.js.org/configuration/mode/).
- */
 /******/ (() => { // webpackBootstrap
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
@@ -19,7 +11,15 @@
 /*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ \"./js/maze.js\");\n\ndocument.addEventListener(\"DOMContentLoaded\", function () {\n  console.log(\"Main.jss is running!\");\n  var mazeCanvas = document.getElementById(\"maze_canvas\");\n  var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mazeCanvas);\n  maze.draw();\n});\n\n//# sourceURL=webpack://halgorithms/./js/main.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
+
+document.addEventListener("DOMContentLoaded", function () {
+  console.log("Main.jss is running!");
+  var mazeCanvas = document.getElementById("maze_canvas");
+  var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mazeCanvas);
+  maze.draw();
+});
 
 /***/ }),
 
@@ -33,7 +33,179 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _maz
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpack_require__.d(__webpack_exports__, {\n/* harmony export */   \"Maze\": () => /* binding */ Maze\n/* harmony export */ });\nfunction _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError(\"Cannot call a class as a function\"); } }\n\nfunction _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if (\"value\" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }\n\nfunction _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }\n\n// meaning of grid values\nvar EMPTY = 0;\nvar WALL = 1; // Edge of canvas, square side, square padding\n\nvar GRID_OFFSET = 3;\nvar SQUARE_SIDE = 15;\nvar SQUARE_PADDING = 1;\nvar Maze = /*#__PURE__*/function () {\n  function Maze(width, height, canvas) {\n    _classCallCheck(this, Maze);\n\n    this.width = width;\n    this.height = height;\n    this.document = canvas;\n    this.ctx = canvas.getContext(\"2d\");\n    var row = [];\n\n    for (var k = 0; k < width; k++) {\n      row.push(EMPTY);\n    }\n\n    this.grid = [];\n\n    for (var _k = 0; _k < height; _k++) {\n      this.grid.push(row);\n    }\n\n    this.mazeBuilderOn = true;\n    this.mazeBuilderEvents();\n  } // draw entire maze\n\n\n  _createClass(Maze, [{\n    key: \"draw\",\n    value: function draw() {\n      this.ctx.fillStyle = \"grey\";\n      this.ctx.fillRect(0, 0, GRID_OFFSET * 2 + this.width * SQUARE_SIDE, GRID_OFFSET * 2 + this.height * SQUARE_SIDE);\n\n      for (var x = 0; x < this.width; x++) {\n        for (var y = 0; y < this.height; y++) {\n          this.drawSquare(x, y);\n        }\n      }\n    } // draw individual square\n\n  }, {\n    key: \"drawSquare\",\n    value: function drawSquare(x, y) {\n      var squareType = this.grid[x][y];\n\n      switch (squareType) {\n        case EMPTY:\n          this.ctx.fillStyle = \"black\";\n          break;\n      }\n\n      this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);\n    } // is mouse in mazeGrid\n\n  }, {\n    key: \"inGrid\",\n    value: function inGrid(x, y) {\n      return x >= GRID_OFFSET && y >= GRID_OFFSET && x <= GRID_OFFSET + this.width * SQUARE_SIDE && y <= GRID_OFFSET + this.height * SQUARE_SIDE;\n    } // convert mouse position into grid coordinates\n\n  }, {\n    key: \"convertToGrid\",\n    value: function convertToGrid(x, y) {\n      return [Math.floor((x - GRID_OFFSET) / SQUARE_SIDE), Math.floor((x - GRID_OFFSET) / SQUARE_SIDE)];\n    } // Set up events for maze building\n\n  }, {\n    key: \"mazeBuilderEvents\",\n    value: function mazeBuilderEvents() {\n      var _this = this;\n\n      this.document.addEventListener('mousedown', function (e) {\n        if (_this.mazeBuilderOn) {\n          _this.isDrawing = true;\n          _this.mbx = e.offsetX;\n          _this.mby = e.offsetY;\n        }\n      });\n      this.document.addEventListener('mousemove', function (e) {\n        if (_this.isDrawing) {\n          var x = e.offsetX;\n          var y = e.offsetY;\n\n          if (_this.inGrid(x, y)) {\n            drawLine(_this.ctx, _this.mbx, _this.mby, x, y);\n            _this.mbx = x;\n            _this.mby = y;\n          }\n        }\n      });\n      this.document.addEventListener('mouseup', function (e) {\n        if (_this.isDrawing) {\n          _this.isDrawing = false;\n          drawLine(_this.ctx, _this.mbx, _this.mby, e.offsetX, e.offsetY);\n          isDrawing = false;\n        }\n      });\n    }\n  }]);\n\n  return Maze;\n}();\n\nfunction drawLine(context, x1, y1, x2, y2) {\n  context.beginPath();\n  context.strokeStyle = 'red';\n  context.lineWidth = 1;\n  context.moveTo(x1, y1);\n  context.lineTo(x2, y2);\n  context.stroke();\n  context.closePath();\n}\n\n//# sourceURL=webpack://halgorithms/./js/maze.js?");
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Maze": () => /* binding */ Maze
+/* harmony export */ });
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(Symbol.iterator in Object(arr))) return; var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+// meaning of grid values
+var EMPTY = 0;
+var WALL = 1;
+var START = 2;
+var FINISH = 3; // edge of canvas, square side, square padding
+
+var GRID_OFFSET = 3;
+var SQUARE_SIDE = 17;
+var SQUARE_PADDING = 1;
+var Maze = /*#__PURE__*/function () {
+  function Maze(width, height, canvas) {
+    _classCallCheck(this, Maze);
+
+    this.width = width;
+    this.height = height;
+    this.document = canvas;
+    this.ctx = canvas.getContext("2d"); // grid initialization
+
+    var row = [];
+
+    for (var k = 0; k < width; k++) {
+      row.push(EMPTY);
+    }
+
+    this.grid = [];
+
+    for (var _k = 0; _k < height; _k++) {
+      this.grid.push(row.slice());
+    }
+
+    this.grid[0][0] = START;
+    this.grid[this.width - 1][this.height - 1] = FINISH; // maze building initialization
+
+    this.mazeBuilderOn = true;
+    this.mazeBuilderEvents();
+  } // draw entire maze
+
+
+  _createClass(Maze, [{
+    key: "draw",
+    value: function draw() {
+      this.ctx.fillStyle = "grey";
+      this.ctx.fillRect(0, 0, GRID_OFFSET * 2 + this.width * SQUARE_SIDE, GRID_OFFSET * 2 + this.height * SQUARE_SIDE);
+
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          this.drawSquare(x, y);
+        }
+      }
+    } // draw individual square
+
+  }, {
+    key: "drawSquare",
+    value: function drawSquare(x, y) {
+      var squareType = this.grid[x][y];
+
+      switch (squareType) {
+        case EMPTY:
+          this.ctx.fillStyle = "black";
+          break;
+
+        case WALL:
+          this.ctx.fillStyle = "white";
+          break;
+
+        case START:
+          this.ctx.fillStyle = "green";
+          break;
+
+        case FINISH:
+          this.ctx.fillStyle = "red";
+          break;
+      }
+
+      this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);
+    } // is mouse in mazeGrid
+
+  }, {
+    key: "inGrid",
+    value: function inGrid(x, y) {
+      return x >= GRID_OFFSET && y >= GRID_OFFSET && x <= GRID_OFFSET + this.width * SQUARE_SIDE && y <= GRID_OFFSET + this.height * SQUARE_SIDE;
+    } // convert mouse position into grid coordinates
+
+  }, {
+    key: "convertToGrid",
+    value: function convertToGrid(x, y) {
+      return [Math.floor((x - GRID_OFFSET) / SQUARE_SIDE), Math.floor((y - GRID_OFFSET) / SQUARE_SIDE)];
+    } // Flip a square between empty and wall
+
+  }, {
+    key: "flip",
+    value: function flip(x, y) {
+      if (this.grid[x][y] == this.flipTarget) {
+        this.grid[x][y] = this.grid[x][y] == WALL ? EMPTY : WALL;
+        this.drawSquare(x, y);
+      }
+    } // Set up events for maze building
+
+  }, {
+    key: "mazeBuilderEvents",
+    value: function mazeBuilderEvents() {
+      var _this = this;
+
+      this.document.addEventListener('mousedown', function (e) {
+        if (_this.mazeBuilderOn) {
+          if (_this.inGrid(e.offsetX, e.offsetY)) {
+            var pos = _this.convertToGrid(e.offsetX, e.offsetY);
+
+            var _pos = _slicedToArray(pos, 2),
+                x = _pos[0],
+                y = _pos[1];
+
+            if (_this.grid[x][y] == EMPTY || _this.grid[x][y] == WALL) {
+              _this.isBuilding = true;
+              _this.flipTarget = _this.grid[x][y];
+
+              _this.flip(x, y);
+            }
+          }
+        }
+      });
+      this.document.addEventListener('mousemove', function (e) {
+        if (_this.isBuilding) {
+          if (_this.inGrid(e.offsetX, e.offsetY)) {
+            var _this$convertToGrid = _this.convertToGrid(e.offsetX, e.offsetY),
+                _this$convertToGrid2 = _slicedToArray(_this$convertToGrid, 2),
+                x = _this$convertToGrid2[0],
+                y = _this$convertToGrid2[1];
+
+            _this.flip(x, y);
+          }
+        }
+      });
+      this.document.addEventListener('mouseup', function (e) {
+        if (_this.isBuilding) {
+          _this.isBuilding = false;
+        }
+      });
+    }
+  }]);
+
+  return Maze;
+}(); // function drawLine(context, x1, y1, x2, y2) {
+//   context.beginPath();
+//   context.strokeStyle = 'red';
+//   context.lineWidth = 1;
+//   context.moveTo(x1, y1);
+//   context.lineTo(x2, y2);
+//   context.stroke();
+//   context.closePath();
+// }
 
 /***/ })
 
@@ -98,3 +270,4 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export */ __webpac
 /******/ 	// This entry module used 'exports' so it can't be inlined
 /******/ })()
 ;
+//# sourceMappingURL=bundle.js.map
