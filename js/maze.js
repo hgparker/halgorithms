@@ -21,7 +21,7 @@ export class Maze {
     // grid initialization
     let row = [];
     for (let k = 0; k < width; k++)
-      row.push(EMPTY);
+      row.push(WALL);
     this.grid = [];
     for (let k = 0; k < height; k++)
       this.grid.push(row.slice());
@@ -50,10 +50,10 @@ export class Maze {
     let squareType = this.grid[x][y];
     switch (squareType) {
       case EMPTY:
-        this.ctx.fillStyle = "black";
+        this.ctx.fillStyle = "white";
         break;
       case WALL:
-        this.ctx.fillStyle = "white";
+        this.ctx.fillStyle = "black";
         break;
       case START:
         this.ctx.fillStyle = "green";
@@ -69,9 +69,9 @@ export class Maze {
 
   // is mouse in mazeGrid
   inGrid(x, y) {
-    return (x >= GRID_OFFSET) && (y >= GRID_OFFSET)
-      && (x <= GRID_OFFSET + this.width*SQUARE_SIDE)
-      && (y <= GRID_OFFSET + this.height*SQUARE_SIDE);
+    return (x > GRID_OFFSET) && (y > GRID_OFFSET)
+      && (x < GRID_OFFSET + this.width*SQUARE_SIDE)
+      && (y < GRID_OFFSET + this.height*SQUARE_SIDE);
   }
 
   // convert mouse position into grid coordinates

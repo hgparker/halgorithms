@@ -76,7 +76,7 @@ var Maze = /*#__PURE__*/function () {
     var row = [];
 
     for (var k = 0; k < width; k++) {
-      row.push(EMPTY);
+      row.push(WALL);
     }
 
     this.grid = [];
@@ -113,11 +113,11 @@ var Maze = /*#__PURE__*/function () {
 
       switch (squareType) {
         case EMPTY:
-          this.ctx.fillStyle = "black";
+          this.ctx.fillStyle = "white";
           break;
 
         case WALL:
-          this.ctx.fillStyle = "white";
+          this.ctx.fillStyle = "black";
           break;
 
         case START:
@@ -135,7 +135,7 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "inGrid",
     value: function inGrid(x, y) {
-      return x >= GRID_OFFSET && y >= GRID_OFFSET && x <= GRID_OFFSET + this.width * SQUARE_SIDE && y <= GRID_OFFSET + this.height * SQUARE_SIDE;
+      return x > GRID_OFFSET && y > GRID_OFFSET && x < GRID_OFFSET + this.width * SQUARE_SIDE && y < GRID_OFFSET + this.height * SQUARE_SIDE;
     } // convert mouse position into grid coordinates
 
   }, {
