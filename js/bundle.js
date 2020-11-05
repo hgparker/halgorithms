@@ -51,7 +51,8 @@ var Control = /*#__PURE__*/function () {
       var mainCanvas = document.getElementById("main_canvas");
       var maze = new _maze__WEBPACK_IMPORTED_MODULE_1__.Maze(30, 30, mainCanvas);
       maze.draw();
-      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze", maze.solveBFS);
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze BFS", maze.solveBFS);
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze Mouse", maze.solveMouse);
     }
   }]);
 
@@ -124,7 +125,9 @@ var VISITED = 4; // edge of canvas, square side, square padding
 
 var GRID_OFFSET = 3;
 var SQUARE_SIDE = 17;
-var SQUARE_PADDING = 1;
+var SQUARE_PADDING = 1; // directions used in several algorithms
+
+var DIRECTIONS = [[-1, 0], [1, 0], [0, 1], [0, -1]];
 var Maze = /*#__PURE__*/function () {
   function Maze(width, height, canvas) {
     _classCallCheck(this, Maze);
@@ -158,10 +161,23 @@ var Maze = /*#__PURE__*/function () {
 
     this.solveBFS = this.solveBFS.bind(this);
     this.drawSquare = this.drawSquare.bind(this);
-  } // draw entire maze
+    this.solveMouse = this.solveMouse.bind(this);
+    this.mouseMove = this.mouseMove.bind(this); // this.drawSquare = this.drawSquare.bind(this);
+  } // getters and setters
 
 
   _createClass(Maze, [{
+    key: "getValue",
+    value: function getValue(pos) {
+      return this.grid[pos[0]][pos[1]];
+    }
+  }, {
+    key: "setValue",
+    value: function setValue(pos, value) {
+      this.grid[pos[0]][pos[1]] = value;
+    } // draw entire maze
+
+  }, {
     key: "draw",
     value: function draw() {
       this.ctx.fillStyle = "grey";
@@ -274,7 +290,6 @@ var Maze = /*#__PURE__*/function () {
     value: function solveBFS() {
       var _this2 = this;
 
-      var directions = [[-1, 0], [1, 0], [0, 1], [0, -1]];
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
       var numSquares = 0;
@@ -296,8 +311,8 @@ var Maze = /*#__PURE__*/function () {
         numSquares++;
 
         for (var d = 0; d < 4; d++) {
-          var neighborX = square[0] + directions[d][0];
-          var neighborY = square[1] + directions[d][1];
+          var neighborX = square[0] + DIRECTIONS[d][0];
+          var neighborY = square[1] + DIRECTIONS[d][1];
           if (neighborX < 0 || neighborX >= _this2.width || neighborY < 0 || neighborY >= _this2.height) continue;
           if (_this2.grid[neighborX][neighborY] == EMPTY || _this2.grid[neighborX][neighborY] == FINISH) q.enqueque([neighborX, neighborY]);
         }
@@ -321,6 +336,71 @@ var Maze = /*#__PURE__*/function () {
       }
 
       console.log("didn't find a start!");
+    } // Mouse algorithm
+
+  }, {
+    key: "solveMouse",
+    value: function solveMouse() {
+      var currentSquare = this.getStart();
+      var options = this.getDirectionOptions(currentSquare);
+
+      if (options.length == 0) {
+        console.log("game over man, game over");
+        return;
+      }
+
+      this.mouseMove(currentSquare, options[0]);
+    }
+  }, {
+    key: "mouseMove",
+    value: function mouseMove(currentSquare, currentDirection) {
+      var _this3 = this;
+
+      if (this.getValue(currentSquare) == FINISH) return;
+      var options = this.getDirectionOptions(currentSquare);
+      var newDirection = currentDirection;
+      if (options.length == 1) newDirection = options[0];
+      if (options.length == 2 && !options.includes(currentDirection)) newDirection = options[Math.floor(Math.random() * options.length)];
+
+      if (options.length >= 3) {
+        options = options.filter(function (option) {
+          return option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1];
+        });
+        newDirection = options[Math.floor(Math.random() * options.length)];
+      }
+
+      if (this.getValue(currentSquare) == VISITED) {
+        this.setValue(currentSquare, EMPTY);
+        this.drawSquare(currentSquare[0], currentSquare[1]);
+      }
+
+      currentSquare[0] += newDirection[0];
+      currentSquare[1] += newDirection[1];
+      if (this.getValue(currentSquare) == EMPTY) this.setValue(currentSquare, VISITED);
+      this.drawSquare(currentSquare[0], currentSquare[1]);
+      setTimeout(function () {
+        return _this3.mouseMove(currentSquare, newDirection);
+      }, 100);
+    }
+  }, {
+    key: "getDirectionOptions",
+    value: function getDirectionOptions(square) {
+      var options = [];
+
+      for (var d = 0; d < 4; d++) {
+        if (this.acceptableDirection(square, DIRECTIONS[d])) options.push(DIRECTIONS[d]);
+      }
+
+      return options;
+    }
+  }, {
+    key: "acceptableDirection",
+    value: function acceptableDirection(square, direction) {
+      var neighborX = square[0] + direction[0];
+      var neighborY = square[1] + direction[1];
+      if (neighborX < 0 || neighborX >= this.width || neighborY < 0 || neighborY >= this.height) return false;
+      if (this.grid[neighborX][neighborY] == WALL) return false;
+      return true;
     }
   }]);
 

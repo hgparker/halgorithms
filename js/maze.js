@@ -12,6 +12,9 @@ const GRID_OFFSET = 3;
 const SQUARE_SIDE = 17;
 const SQUARE_PADDING = 1;
 
+// directions used in several algorithms
+const DIRECTIONS = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+
 export class Maze {
   constructor(width, height, canvas) {
     // set up stuff with main canvas panel
@@ -42,6 +45,19 @@ export class Maze {
     // protecting callbacks
     this.solveBFS = this.solveBFS.bind(this);
     this.drawSquare = this.drawSquare.bind(this);
+    this.solveMouse = this.solveMouse.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
+    // this.drawSquare = this.drawSquare.bind(this);
+  }
+
+  // getters and setters
+
+  getValue(pos) {
+    return this.grid[pos[0]][pos[1]];
+  }
+
+  setValue(pos, value) {
+    this.grid[pos[0]][pos[1]] = value;
   }
 
   // draw entire maze
@@ -139,7 +155,6 @@ export class Maze {
   }
   
   solveBFS() {
-    let directions = [[-1, 0], [1, 0], [0, 1], [0, -1]];
     let start = this.getStart();     
     let q = new Queue;
     let numSquares = 0;
@@ -154,12 +169,12 @@ export class Maze {
       }
 
       this.grid[square[0]][square[1]] = VISITED;
-      setTimeout(() => this.drawSquare(square[0], square[1]), 100*(numSquares + 1), );
+      setTimeout(() => this.drawSquare(square[0], square[1]), 100*(numSquares + 1));
       numSquares++;
       
       for (let d=0; d<4; d++) {
-        let neighborX = square[0] + directions[d][0];
-        let neighborY = square[1] + directions[d][1];
+        let neighborX = square[0] + DIRECTIONS[d][0];
+        let neighborY = square[1] + DIRECTIONS[d][1];
         if (neighborX < 0 || neighborX >= this.width || neighborY < 0 || neighborY >= this.height)
           continue;
         if (this.grid[neighborX][neighborY] == EMPTY || this.grid[neighborX][neighborY] == FINISH)
@@ -177,9 +192,72 @@ export class Maze {
       }
     }
     console.log("didn't find a start!");
-  }  
+  }
+  
+  // Mouse algorithm
+  solveMouse() {
+    let currentSquare = this.getStart();     
+    let options = this.getDirectionOptions(currentSquare);
+
+    if (options.length == 0) {
+      console.log("game over man, game over");
+      return;
+    }
+    
+    this.mouseMove(currentSquare, options[0]);
+  }
+
+  mouseMove(currentSquare, currentDirection) {
+  
+    if (this.getValue(currentSquare) == FINISH)
+      return;
+
+    let options = this.getDirectionOptions(currentSquare);
+    let newDirection = currentDirection;
+
+    if (options.length == 1)
+      newDirection = options[0];
+    
+    if (options.length == 2 && !options.includes(currentDirection))
+      newDirection = options[Math.floor(Math.random() * options.length)];
+
+    if (options.length >= 3) {
+      options = options.filter((option) =>
+        option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1]);
+      newDirection = options[Math.floor(Math.random() * options.length)];
+    }
+
+    if (this.getValue(currentSquare) == VISITED) {
+      this.setValue(currentSquare, EMPTY);
+      this.drawSquare(currentSquare[0], currentSquare[1]);
+    }
+    
+    currentSquare[0] += newDirection[0];
+    currentSquare[1] += newDirection[1];
+    
+    if (this.getValue(currentSquare) == EMPTY) 
+      this.setValue(currentSquare, VISITED);
+    this.drawSquare(currentSquare[0], currentSquare[1]);
+
+    setTimeout(() => this.mouseMove(currentSquare, newDirection), 100);
+  }
+
+  getDirectionOptions(square) {
+    let options = [];
+    for (let d=0; d<4; d++) {
+      if (this.acceptableDirection(square, DIRECTIONS[d]))
+        options.push(DIRECTIONS[d]);
+    }
+    return options;
+  }
+
+  acceptableDirection(square, direction) {
+    let neighborX = square[0] + direction[0];
+    let neighborY = square[1] + direction[1];
+    if (neighborX < 0 || neighborX >= this.width || neighborY < 0 || neighborY >= this.height)
+      return false;
+    if (this.grid[neighborX][neighborY] == WALL)
+      return false
+    return true;
+  }
 }
-
-
-
-
