@@ -16,12 +16,14 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Control": () => /* binding */ Control
 /* harmony export */ });
-/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./js/util.js");
+/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
 console.log("control.js is running!"); // Constants for switching
@@ -47,8 +49,11 @@ var Control = /*#__PURE__*/function () {
     key: "startMaze",
     value: function startMaze() {
       var mainCanvas = document.getElementById("main_canvas");
-      var maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, mainCanvas);
+      var maze = new _maze__WEBPACK_IMPORTED_MODULE_1__.Maze(30, 30, mainCanvas);
       maze.draw();
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze", function () {
+        return console.log("solve maze");
+      });
     }
   }]);
 
@@ -125,10 +130,14 @@ var Maze = /*#__PURE__*/function () {
   function Maze(width, height, canvas) {
     _classCallCheck(this, Maze);
 
+    // set up stuff with main canvas panel
     this.width = width;
     this.height = height;
     this.document = canvas;
-    this.ctx = canvas.getContext("2d"); // grid initialization
+    canvas.width = GRID_OFFSET * 2 + SQUARE_SIDE * width;
+    canvas.height = GRID_OFFSET * 2 + SQUARE_SIDE * height;
+    this.ctx = canvas.getContext("2d"); // set up frame panel
+    // grid initialization
 
     var row = [];
 
@@ -251,18 +260,38 @@ var Maze = /*#__PURE__*/function () {
         }
       });
     }
+  }, {
+    key: "solveBFS",
+    value: function solveBFS() {}
   }]);
 
   return Maze;
-}(); // function drawLine(context, x1, y1, x2, y2) {
-//   context.beginPath();
-//   context.strokeStyle = 'red';
-//   context.lineWidth = 1;
-//   context.moveTo(x1, y1);
-//   context.lineTo(x2, y2);
-//   context.stroke();
-//   context.closePath();
-// }
+}();
+
+/***/ }),
+
+/***/ "./js/util.js":
+/*!********************!*\
+  !*** ./js/util.js ***!
+  \********************/
+/*! namespace exports */
+/*! export createButton [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createButton": () => /* binding */ createButton
+/* harmony export */ });
+function createButton(parentId, buttonText, buttonCallback) {
+  var parentElement = document.getElementById(parentId);
+  var newButton = document.createElement("BUTTON");
+  var text = document.createTextNode(buttonText);
+  newButton.appendChild(text);
+  newButton.onclick = buttonCallback;
+  parentElement.appendChild(newButton);
+}
 
 /***/ })
 

@@ -13,10 +13,15 @@ const SQUARE_PADDING = 1;
 
 export class Maze {
   constructor(width, height, canvas) {
+    // set up stuff with main canvas panel
     this.width = width;
     this.height = height;
     this.document = canvas;
+    canvas.width = GRID_OFFSET*2 + SQUARE_SIDE*width;
+    canvas.height = GRID_OFFSET*2 + SQUARE_SIDE*height;
     this.ctx = canvas.getContext("2d");
+
+    // set up frame panel
 
     // grid initialization
     let row = [];
@@ -123,16 +128,12 @@ export class Maze {
       }
     });
   }
+
+  solveBFS() {
+    
+  }
 }
 
-// function drawLine(context, x1, y1, x2, y2) {
-//   context.beginPath();
-//   context.strokeStyle = 'red';
-//   context.lineWidth = 1;
-//   context.moveTo(x1, y1);
-//   context.lineTo(x2, y2);
-//   context.stroke();
-//   context.closePath();
-// }
+
 
 

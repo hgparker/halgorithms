@@ -1,4 +1,6 @@
+import {createButton} from "./util";
 import {Maze} from "./maze";
+
 
 console.log("control.js is running!");
 
@@ -16,7 +18,7 @@ export class Control {
 
     // run initial frame code
     this.startMaze();
-        
+
     // add event tracking for navbar clicks
   }
 
@@ -29,6 +31,8 @@ export class Control {
   startMaze() {
     let mainCanvas = document.getElementById("main_canvas");
     let maze = new Maze(30, 30, mainCanvas);
-    maze.draw(); 
+    maze.draw();
+
+    createButton("frame_panel", "Solve Maze", () => console.log("solve maze"))
   }
 }
