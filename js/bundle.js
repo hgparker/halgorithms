@@ -51,9 +51,7 @@ var Control = /*#__PURE__*/function () {
       var mainCanvas = document.getElementById("main_canvas");
       var maze = new _maze__WEBPACK_IMPORTED_MODULE_1__.Maze(30, 30, mainCanvas);
       maze.draw();
-      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze", function () {
-        return console.log("solve maze");
-      });
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze", maze.solveBFS);
     }
   }]);
 
@@ -78,9 +76,7 @@ __webpack_require__.r(__webpack_exports__);
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Main.jss is running!");
-  var control = new _control__WEBPACK_IMPORTED_MODULE_1__.Control(); // let mainCanvas = document.getElementById("main_canvas");
-  // let maze = new Maze(30, 30, mainCanvas);
-  // maze.draw();
+  var control = new _control__WEBPACK_IMPORTED_MODULE_1__.Control();
 });
 
 /***/ }),
@@ -92,13 +88,14 @@ document.addEventListener("DOMContentLoaded", function () {
 /*! namespace exports */
 /*! export Maze [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Maze": () => /* binding */ Maze
 /* harmony export */ });
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./js/util.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -117,11 +114,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-// meaning of grid values
+ // meaning of grid values
+
 var EMPTY = 0;
 var WALL = 1;
 var START = 2;
-var FINISH = 3; // edge of canvas, square side, square padding
+var FINISH = 3;
+var VISITED = 4; // edge of canvas, square side, square padding
 
 var GRID_OFFSET = 3;
 var SQUARE_SIDE = 17;
@@ -155,7 +154,10 @@ var Maze = /*#__PURE__*/function () {
     this.grid[this.width - 1][this.height - 1] = FINISH; // maze building initialization
 
     this.mazeBuilderOn = true;
-    this.mazeBuilderEvents();
+    this.mazeBuilderEvents(); // protecting callbacks
+
+    this.solveBFS = this.solveBFS.bind(this);
+    this.drawSquare = this.drawSquare.bind(this);
   } // draw entire maze
 
 
@@ -193,6 +195,13 @@ var Maze = /*#__PURE__*/function () {
         case FINISH:
           this.ctx.fillStyle = "red";
           break;
+
+        case VISITED:
+          this.ctx.fillStyle = "green";
+          break;
+
+        default:
+          console.log("Bad grid value..." + squareType);
       }
 
       this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);
@@ -262,7 +271,57 @@ var Maze = /*#__PURE__*/function () {
     }
   }, {
     key: "solveBFS",
-    value: function solveBFS() {}
+    value: function solveBFS() {
+      var _this2 = this;
+
+      var directions = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+      var start = this.getStart();
+      var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
+      var numSquares = 0;
+      q.enqueque(start);
+
+      var _loop = function _loop() {
+        var square = q.dequeque();
+        if (_this2.grid[square[0]][square[1]] === VISITED) return "continue";
+
+        if (_this2.grid[square[0]][square[1]] === FINISH) {
+          console.log("finished");
+          return "break";
+        }
+
+        _this2.grid[square[0]][square[1]] = VISITED;
+        setTimeout(function () {
+          return _this2.drawSquare(square[0], square[1]);
+        }, 100 * (numSquares + 1));
+        numSquares++;
+
+        for (var d = 0; d < 4; d++) {
+          var neighborX = square[0] + directions[d][0];
+          var neighborY = square[1] + directions[d][1];
+          if (neighborX < 0 || neighborX >= _this2.width || neighborY < 0 || neighborY >= _this2.height) continue;
+          if (_this2.grid[neighborX][neighborY] == EMPTY || _this2.grid[neighborX][neighborY] == FINISH) q.enqueque([neighborX, neighborY]);
+        }
+      };
+
+      while (q.length() > 0) {
+        var _ret = _loop();
+
+        if (_ret === "continue") continue;
+        if (_ret === "break") break;
+      }
+    } // locate start of maze
+
+  }, {
+    key: "getStart",
+    value: function getStart() {
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          if (this.grid[x][y] == START) return [x, y];
+        }
+      }
+
+      console.log("didn't find a start!");
+    }
   }]);
 
   return Maze;
@@ -275,6 +334,7 @@ var Maze = /*#__PURE__*/function () {
   !*** ./js/util.js ***!
   \********************/
 /*! namespace exports */
+/*! export Queue [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createButton [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
@@ -282,8 +342,15 @@ var Maze = /*#__PURE__*/function () {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createButton": () => /* binding */ createButton
+/* harmony export */   "createButton": () => /* binding */ createButton,
+/* harmony export */   "Queue": () => /* binding */ Queue
 /* harmony export */ });
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 function createButton(parentId, buttonText, buttonCallback) {
   var parentElement = document.getElementById(parentId);
   var newButton = document.createElement("BUTTON");
@@ -292,6 +359,37 @@ function createButton(parentId, buttonText, buttonCallback) {
   newButton.onclick = buttonCallback;
   parentElement.appendChild(newButton);
 }
+var Queue = /*#__PURE__*/function () {
+  function Queue() {
+    _classCallCheck(this, Queue);
+
+    this.queueStart = 0;
+    this.queueLength = 0;
+    this.arr = [];
+  }
+
+  _createClass(Queue, [{
+    key: "enqueque",
+    value: function enqueque(q) {
+      this.arr.push(q);
+      this.queueLength++;
+    }
+  }, {
+    key: "dequeque",
+    value: function dequeque() {
+      this.queueLength--;
+      this.queueStart++;
+      return this.arr[this.queueStart - 1];
+    }
+  }, {
+    key: "length",
+    value: function length() {
+      return this.queueLength;
+    }
+  }]);
+
+  return Queue;
+}();
 
 /***/ })
 

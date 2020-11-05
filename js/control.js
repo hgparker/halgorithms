@@ -33,6 +33,6 @@ export class Control {
     let maze = new Maze(30, 30, mainCanvas);
     maze.draw();
 
-    createButton("frame_panel", "Solve Maze", () => console.log("solve maze"))
+    createButton("frame_panel", "Solve Maze", maze.solveBFS)
   }
 }
