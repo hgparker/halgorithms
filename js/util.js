@@ -1,5 +1,6 @@
 
 
+// DOM utilities
 
 export function createButton(parentId, buttonText, buttonCallback) {
   let parentElement = document.getElementById(parentId);
@@ -9,6 +10,22 @@ export function createButton(parentId, buttonText, buttonCallback) {
   newButton.onclick = buttonCallback;
   parentElement.appendChild(newButton);
 }
+
+export function createElement(parentId, element, id, className) {
+  let parentElement = document.getElementById(parentId);
+  let newElement = document.createElement(element);
+  newElement.setAttribute("id", id);  
+  if (className)
+    newElement.setAttribute("class", className);
+  parentElement.appendChild(newElement);
+}
+
+export function removeElement(id) {
+  let element = document.getElementById(id);
+  element.parentNode.removeChild(element);
+}
+
+// DSA utilities
 
 export class Queue {
   constructor () {

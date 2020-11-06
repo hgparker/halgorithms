@@ -2,65 +2,6 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./js/control.js":
-/*!***********************!*\
-  !*** ./js/control.js ***!
-  \***********************/
-/*! namespace exports */
-/*! export Control [provided] [no usage info] [missing usage info prevents renaming] */
-/*! other exports [not provided] [no usage info] */
-/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "Control": () => /* binding */ Control
-/* harmony export */ });
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./js/util.js");
-/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-
-
-console.log("control.js is running!"); // Constants for switching
-
-var MAZE = "MAZE"; // Main class used for switching between algorithm pages
-
-var Control = /*#__PURE__*/function () {
-  function Control() {
-    _classCallCheck(this, Control);
-
-    // set initial frame
-    this.currentFrame = MAZE; // run initial frame code
-
-    this.startMaze(); // add event tracking for navbar clicks
-  } //
-
-
-  _createClass(Control, [{
-    key: "switchFrame",
-    value: function switchFrame(event) {} // Start maze frame
-
-  }, {
-    key: "startMaze",
-    value: function startMaze() {
-      var mainCanvas = document.getElementById("main_canvas");
-      var maze = new _maze__WEBPACK_IMPORTED_MODULE_1__.Maze(30, 30, mainCanvas);
-      maze.draw();
-      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze BFS", maze.solveBFS);
-      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createButton)("frame_panel", "Solve Maze Mouse", maze.solveMouse);
-    }
-  }]);
-
-  return Control;
-}();
-
-/***/ }),
-
 /***/ "./js/main.js":
 /*!********************!*\
   !*** ./js/main.js ***!
@@ -71,14 +12,90 @@ var Control = /*#__PURE__*/function () {
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
-/* harmony import */ var _control__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./control */ "./js/control.js");
-
+/* harmony import */ var _main_controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./main_controller */ "./js/main_controller.js");
 
 document.addEventListener("DOMContentLoaded", function () {
   console.log("Main.jss is running!");
-  var control = new _control__WEBPACK_IMPORTED_MODULE_1__.Control();
+  var mainControl = new _main_controller__WEBPACK_IMPORTED_MODULE_0__.MainController();
 });
+
+/***/ }),
+
+/***/ "./js/main_controller.js":
+/*!*******************************!*\
+  !*** ./js/main_controller.js ***!
+  \*******************************/
+/*! namespace exports */
+/*! export MainController [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MainController": () => /* binding */ MainController
+/* harmony export */ });
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./js/util.js");
+/* harmony import */ var _maze_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./maze_controller */ "./js/maze_controller.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+ // Constants for switching between algorithm frames
+
+var MAZE_CONTROLLER = "MAZE_CONTROLLER"; // this.mazeController
+// Main class used for switching between algorithm frames
+
+var MainController = /*#__PURE__*/function () {
+  function MainController() {
+    _classCallCheck(this, MainController);
+
+    // set up control mechanisms for frame switching  
+    // set up initial frame and run code
+    this.currentFrame = MAZE_CONTROLLER;
+    this.startMazeController();
+  } // switch controllers
+
+
+  _createClass(MainController, [{
+    key: "switchFrame",
+    value: function switchFrame(newFrame) {
+      // shut down current frame
+      switch (this.currentFrame) {
+        case MAZE_CONTROLLER:
+          this.stopMazeController();
+          break;
+      } // start up the new frame
+
+
+      switch (newFrame) {
+        case MAZE_CONTROLLER:
+          this.startMazeController();
+          break;
+      }
+
+      this.currentFrame = newFrame;
+    } // Start maze frame
+
+  }, {
+    key: "startMazeController",
+    value: function startMazeController() {
+      this.mazeController = new _maze_controller__WEBPACK_IMPORTED_MODULE_1__.MazeController();
+    } // shut down this.mazeController
+
+  }, {
+    key: "stopMazeController",
+    value: function stopMazeController() {
+      this.mazeController.terminate();
+      delete this.mazeController;
+    }
+  }]);
+
+  return MainController;
+}();
 
 /***/ }),
 
@@ -409,6 +426,114 @@ var Maze = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./js/maze_controller.js":
+/*!*******************************!*\
+  !*** ./js/maze_controller.js ***!
+  \*******************************/
+/*! namespace exports */
+/*! export MazeController [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__, __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "MazeController": () => /* binding */ MazeController
+/* harmony export */ });
+/* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util */ "./js/util.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+
+ // modes for MazeController
+// all use this.maze
+
+var CREATE_MAZE_MODE = 'CREATE_MAZE_MODE';
+var DEFAULT_MAZE_MODE = "DEFAULT_MAZE_MODE";
+var SOLVE_MAZE_MODE = "SOLVE_MAZE_MODE";
+var SOLVED_MAZE_MODE = "SOLVED_MAZE_MODE";
+var MazeController = /*#__PURE__*/function () {
+  function MazeController() {
+    var _this = this;
+
+    _classCallCheck(this, MazeController);
+
+    // Set up main panels we'll need for mode control
+    this.mainCanvas = document.getElementById("main_canvas");
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", "nav_bar");
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "Create Maze", function () {
+      return _this.switchMode(CREATE_MAZE_MODE);
+    });
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "Solve Maze", function () {
+      return _this.switchMode(SOLVE_MAZE_MODE);
+    }); // Initialize to pure create
+
+    this.startMode(CREATE_MAZE_MODE); // Protect callbacks
+
+    this.switchMode = this.switchMode.bind(this);
+  } // switch modes in maze_controller
+
+
+  _createClass(MazeController, [{
+    key: "switchMode",
+    value: function switchMode(mode) {
+      if (mode === this.currentMode) return;
+      this.stopMode(this.currentMode);
+      this.startMode(mode);
+    } // start mode
+
+  }, {
+    key: "startMode",
+    value: function startMode(mode) {
+      switch (mode) {
+        case CREATE_MAZE_MODE:
+          console.log("entering create_maze mode");
+          this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.mainCanvas);
+          this.maze.draw();
+          break;
+
+        case SOLVE_MAZE_MODE:
+          // debugger;
+          console.log("entering solve maze mode");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "Solve with BFS", this.maze.solveBFS);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "Solve with Mouse", this.maze.solveMouse);
+          break;
+      }
+
+      this.currentMode = mode;
+    } // leave mode
+
+  }, {
+    key: "stopMode",
+    value: function stopMode(mode) {
+      switch (mode) {
+        case CREATE_MAZE_MODE:
+          console.log("leaving create_maze mode"); // exit code here
+
+          break;
+
+        case SOLVE_MAZE_MODE:
+          console.log("leaving solve_maze mode");
+          break;
+      }
+    } // shut down whole component
+
+  }, {
+    key: "stopFrame",
+    value: function stopFrame() {
+      (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("maze_bar");
+    }
+  }]);
+
+  return MazeController;
+}();
+
+/***/ }),
+
 /***/ "./js/util.js":
 /*!********************!*\
   !*** ./js/util.js ***!
@@ -416,6 +541,8 @@ var Maze = /*#__PURE__*/function () {
 /*! namespace exports */
 /*! export Queue [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createButton [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export createElement [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export removeElement [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
@@ -423,6 +550,8 @@ var Maze = /*#__PURE__*/function () {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createButton": () => /* binding */ createButton,
+/* harmony export */   "createElement": () => /* binding */ createElement,
+/* harmony export */   "removeElement": () => /* binding */ removeElement,
 /* harmony export */   "Queue": () => /* binding */ Queue
 /* harmony export */ });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -431,6 +560,7 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+// DOM utilities
 function createButton(parentId, buttonText, buttonCallback) {
   var parentElement = document.getElementById(parentId);
   var newButton = document.createElement("BUTTON");
@@ -439,6 +569,18 @@ function createButton(parentId, buttonText, buttonCallback) {
   newButton.onclick = buttonCallback;
   parentElement.appendChild(newButton);
 }
+function createElement(parentId, element, id, className) {
+  var parentElement = document.getElementById(parentId);
+  var newElement = document.createElement(element);
+  newElement.setAttribute("id", id);
+  if (className) newElement.setAttribute("class", className);
+  parentElement.appendChild(newElement);
+}
+function removeElement(id) {
+  var element = document.getElementById(id);
+  element.parentNode.removeChild(element);
+} // DSA utilities
+
 var Queue = /*#__PURE__*/function () {
   function Queue() {
     _classCallCheck(this, Queue);
