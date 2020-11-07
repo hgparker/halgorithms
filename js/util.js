@@ -1,5 +1,3 @@
-
-
 // DOM utilities
 
 // export function createElement(parentId, element, id, className) {
@@ -58,3 +56,59 @@ export class Queue {
     return this.queueLength;
   }
 }
+
+export class PriorityQueue {
+ constructor(cb) {
+   this.arr = [0]
+   this.cb = cb;
+ }
+
+length() {
+   return this.arr.length-1;
+}
+
+lastIndex() {
+  return this.length();
+}
+
+add(element) {
+  this.arr.push(element);
+  swim(this.lastIndex());
+}
+
+swim(index) {
+  while (Math.floor(index/2) > 0 && this.cb(this.arr[Math.floor(index/2)], this.arr[index]) == -1) {
+    this.swap(Math.floor(index/2), index);
+    index = Math.floor(index/2);
+  }
+}
+ 
+pop() {
+  if (this.length() == 0)
+    return;
+  let retElement = this.arr[1];
+  let index = 1;
+  while (2*index <= this.lastIndex()) {
+    let left = 2*index;
+    let right = 2*index+1;
+    if (right <= this.lastIndex && this.arr[right] < this.arr[left]) {
+      this.arr[index] = this.arr[right];
+      index = right;
+    } else {
+      this.arr[index] = this.arr[left];
+      index = left;
+    }
+  }
+  this.swap(index, this.lastIndex());
+  this.arr.pop();
+  this.swim(index);
+  return retElement;
+} 
+
+ swap(a, b) {
+  let temp = this.arr[a];
+  this.arr[a] = this.arr[b];
+  this.arr[b] = temp;
+ }
+}
+

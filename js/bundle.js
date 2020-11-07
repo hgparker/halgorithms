@@ -561,6 +561,7 @@ var MazeController = /*#__PURE__*/function () {
   !*** ./js/util.js ***!
   \********************/
 /*! namespace exports */
+/*! export PriorityQueue [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export Queue [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createButton [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createElement [provided] [no usage info] [missing usage info prevents renaming] */
@@ -574,7 +575,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "createElement": () => /* binding */ createElement,
 /* harmony export */   "createButton": () => /* binding */ createButton,
 /* harmony export */   "removeElement": () => /* binding */ removeElement,
-/* harmony export */   "Queue": () => /* binding */ Queue
+/* harmony export */   "Queue": () => /* binding */ Queue,
+/* harmony export */   "PriorityQueue": () => /* binding */ PriorityQueue
 /* harmony export */ });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -642,6 +644,74 @@ var Queue = /*#__PURE__*/function () {
   }]);
 
   return Queue;
+}();
+var PriorityQueue = /*#__PURE__*/function () {
+  function PriorityQueue(cb) {
+    _classCallCheck(this, PriorityQueue);
+
+    this.arr = [0];
+    this.cb = cb;
+  }
+
+  _createClass(PriorityQueue, [{
+    key: "length",
+    value: function length() {
+      return this.arr.length - 1;
+    }
+  }, {
+    key: "lastIndex",
+    value: function lastIndex() {
+      return this.length();
+    }
+  }, {
+    key: "add",
+    value: function add(element) {
+      this.arr.push(element);
+      swim(this.lastIndex());
+    }
+  }, {
+    key: "swim",
+    value: function swim(index) {
+      while (Math.floor(index / 2) > 0 && this.cb(this.arr[Math.floor(index / 2)], this.arr[index]) == -1) {
+        this.swap(Math.floor(index / 2), index);
+        index = Math.floor(index / 2);
+      }
+    }
+  }, {
+    key: "pop",
+    value: function pop() {
+      if (this.length() == 0) return;
+      var retElement = this.arr[1];
+      var index = 1;
+
+      while (2 * index <= this.lastIndex()) {
+        var left = 2 * index;
+        var right = 2 * index + 1;
+
+        if (right <= this.lastIndex && this.arr[right] < this.arr[left]) {
+          this.arr[index] = this.arr[right];
+          index = right;
+        } else {
+          this.arr[index] = this.arr[left];
+          index = left;
+        }
+      }
+
+      this.swap(index, this.lastIndex());
+      this.arr.pop();
+      this.swim(index);
+      return retElement;
+    }
+  }, {
+    key: "swap",
+    value: function swap(a, b) {
+      var temp = this.arr[a];
+      this.arr[a] = this.arr[b];
+      this.arr[b] = temp;
+    }
+  }]);
+
+  return PriorityQueue;
 }();
 
 /***/ })
