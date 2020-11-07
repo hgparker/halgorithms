@@ -12,9 +12,9 @@ export class MazeController {
   constructor() {
 
     // Set up main panels we'll need for mode control
-    createElement("frame_panel", "div", "maze_bar", "nav_bar");
-    createButton("maze_bar", "create_maze_button", "button", "Create Maze", () => this.switchMode(CREATE_MAZE_MODE));
-    createButton("maze_bar", "solve_maze_button", "button", "Solve Maze", () => this.switchMode(SOLVE_MAZE_MODE));
+    createElement("frame_panel", "div", "maze_bar", {className: "nav_bar"});
+    createButton("maze_bar", "create_maze_button", "Create Maze", {callback: () => this.switchMode(CREATE_MAZE_MODE)});
+    createButton("maze_bar", "solve_maze_button", "Solve Maze", {callback: () => this.switchMode(SOLVE_MAZE_MODE)});
 
 
     // Initialize to pure create
@@ -42,18 +42,19 @@ export class MazeController {
         console.log("entering create_maze mode")
         if (this.canvas) {
           removeElement("canvas");
-        }
-        createElement("frame_elements", "canvas", "canvas", "canvas");
+        
+    }
+        createElement("frame_elements", "canvas", "canvas");
         this.canvas = document.getElementById("canvas");
         this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"))
         this.maze = new Maze(30, 30, this.canvas);
         this.maze.draw();
         break;
       case SOLVE_MAZE_MODE:
-        // debugger;
         console.log("entering solve maze mode");
-        createButton("frame_panel", "solve_bfs_button", "button", "Solve with BFS", this.maze.solveBFS);
-        createButton("frame_panel", "solve_mouse_button", "button", "Solve with Mouse", this.maze.solveMouse);      
+        createButton("frame_panel", "solve_bfs_button", "Solve with BFS", {callback: this.maze.solveBFS});
+        createButton("frame_panel", "solve_mouse_button", "Solve with Mouse", {callback: this.maze.solveMouse});      
+
         break;
     }
     this.currentMode = mode;

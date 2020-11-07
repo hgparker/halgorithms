@@ -467,12 +467,18 @@ var MazeController = /*#__PURE__*/function () {
     _classCallCheck(this, MazeController);
 
     // Set up main panels we'll need for mode control
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", "nav_bar");
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "create_maze_button", "button", "Create Maze", function () {
-      return _this.switchMode(CREATE_MAZE_MODE);
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", {
+      className: "nav_bar"
     });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "solve_maze_button", "button", "Solve Maze", function () {
-      return _this.switchMode(SOLVE_MAZE_MODE);
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "create_maze_button", "Create Maze", {
+      callback: function callback() {
+        return _this.switchMode(CREATE_MAZE_MODE);
+      }
+    });
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "solve_maze_button", "Solve Maze", {
+      callback: function callback() {
+        return _this.switchMode(SOLVE_MAZE_MODE);
+      }
     }); // Initialize to pure create
 
     this.startMode(CREATE_MAZE_MODE); // Protect callbacks
@@ -500,7 +506,7 @@ var MazeController = /*#__PURE__*/function () {
             (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas");
           }
 
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_elements", "canvas", "canvas", "canvas");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_elements", "canvas", "canvas");
           this.canvas = document.getElementById("canvas");
           this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"));
           this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.canvas);
@@ -508,10 +514,13 @@ var MazeController = /*#__PURE__*/function () {
           break;
 
         case SOLVE_MAZE_MODE:
-          // debugger;
           console.log("entering solve maze mode");
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_bfs_button", "button", "Solve with BFS", this.maze.solveBFS);
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_mouse_button", "button", "Solve with Mouse", this.maze.solveMouse);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_bfs_button", "Solve with BFS", {
+            callback: this.maze.solveBFS
+          });
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_mouse_button", "Solve with Mouse", {
+            callback: this.maze.solveMouse
+          });
           break;
       }
 
@@ -562,8 +571,8 @@ var MazeController = /*#__PURE__*/function () {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "createButton": () => /* binding */ createButton,
 /* harmony export */   "createElement": () => /* binding */ createElement,
+/* harmony export */   "createButton": () => /* binding */ createButton,
 /* harmony export */   "removeElement": () => /* binding */ removeElement,
 /* harmony export */   "Queue": () => /* binding */ Queue
 /* harmony export */ });
@@ -574,22 +583,29 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 // DOM utilities
-function createButton(parentId, buttonId, buttonClass, buttonText, buttonCallback) {
-  var parentElement = document.getElementById(parentId);
-  var newButton = document.createElement("BUTTON");
-  var text = document.createTextNode(buttonText);
-  newButton.appendChild(text);
-  newButton.setAttribute("id", buttonId);
-  newButton.setAttribute("class", buttonClass);
-  newButton.onclick = buttonCallback;
-  parentElement.appendChild(newButton);
-}
-function createElement(parentId, element, id, className) {
+// export function createElement(parentId, element, id, className) {
+//   let parentElement = document.getElementById(parentId);
+//   let newElement = document.createElement(element);
+//   newElement.setAttribute("id", id);  
+//   if (className)
+//     newElement.setAttribute("class", className);
+//   parentElement.appendChild(newElement);
+// }
+function createElement(parentId, element, id) {
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   var parentElement = document.getElementById(parentId);
   var newElement = document.createElement(element);
   newElement.setAttribute("id", id);
-  if (className) newElement.setAttribute("class", className);
+  if (options.className) newElement.setAttribute("class", options.className);
+  if (options.callback) newElement.onclick = options.callback;
   parentElement.appendChild(newElement);
+  return newElement;
+}
+function createButton(parentId, buttonId, buttonText) {
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  var newButton = createElement(parentId, "BUTTON", buttonId, options);
+  var text = document.createTextNode(buttonText);
+  newButton.appendChild(text);
 }
 function removeElement(id) {
   var element = document.getElementById(id);
