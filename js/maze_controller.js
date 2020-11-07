@@ -12,10 +12,10 @@ export class MazeController {
   constructor() {
 
     // Set up main panels we'll need for mode control
-    this.mainCanvas = document.getElementById("main_canvas");
     createElement("frame_panel", "div", "maze_bar", "nav_bar");
-    createButton("maze_bar", "Create Maze", () => this.switchMode(CREATE_MAZE_MODE));
-    createButton("maze_bar", "Solve Maze", () => this.switchMode(SOLVE_MAZE_MODE));
+    createButton("maze_bar", "create_maze_button", "button", "Create Maze", () => this.switchMode(CREATE_MAZE_MODE));
+    createButton("maze_bar", "solve_maze_button", "button", "Solve Maze", () => this.switchMode(SOLVE_MAZE_MODE));
+
 
     // Initialize to pure create
     this.startMode(CREATE_MAZE_MODE);
@@ -40,14 +40,20 @@ export class MazeController {
     switch (mode) {
       case CREATE_MAZE_MODE:
         console.log("entering create_maze mode")
-        this.maze = new Maze(30, 30, this.mainCanvas);
+        if (this.canvas) {
+          removeElement("canvas");
+        }
+        createElement("frame_elements", "canvas", "canvas", "canvas");
+        this.canvas = document.getElementById("canvas");
+        this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"))
+        this.maze = new Maze(30, 30, this.canvas);
         this.maze.draw();
         break;
       case SOLVE_MAZE_MODE:
         // debugger;
         console.log("entering solve maze mode");
-        createButton("frame_panel", "Solve with BFS", this.maze.solveBFS);
-        createButton("frame_panel", "Solve with Mouse", this.maze.solveMouse);      
+        createButton("frame_panel", "solve_bfs_button", "button", "Solve with BFS", this.maze.solveBFS);
+        createButton("frame_panel", "solve_mouse_button", "button", "Solve with Mouse", this.maze.solveMouse);      
         break;
     }
     this.currentMode = mode;
@@ -62,6 +68,8 @@ export class MazeController {
         break;
       case SOLVE_MAZE_MODE:
         console.log("leaving solve_maze mode");
+        removeElement("solve_bfs_button");
+        removeElement("solve_mouse_button")
         break;
     }
   }

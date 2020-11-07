@@ -20,12 +20,10 @@ export class Maze {
     // set up stuff with main canvas panel
     this.width = width;
     this.height = height;
-    this.document = canvas;
+    this.canvas = canvas;
     canvas.width = GRID_OFFSET*2 + SQUARE_SIDE*width;
     canvas.height = GRID_OFFSET*2 + SQUARE_SIDE*height;
     this.ctx = canvas.getContext("2d");
-
-    // set up frame panel
 
     // grid initialization
     let row = [];
@@ -40,7 +38,7 @@ export class Maze {
 
     // maze building initialization
     this.mazeBuilderOn = true;
-    this.mazeBuilderEvents();
+    this.startMazeBuilderEvents();
 
     // protecting callbacks
     this.solveBFS = this.solveBFS.bind(this);
@@ -122,8 +120,8 @@ export class Maze {
 
   // Set up events for maze building
 
-  mazeBuilderEvents() {
-    this.document.addEventListener('mousedown', e => {
+  startMazeBuilderEvents() {
+    this.canvas.addEventListener('mousedown', e => {
       if (this.mazeBuilderOn) {
         if (this.inGrid(e.offsetX, e.offsetY)) {
           let pos = this.convertToGrid(e.offsetX, e.offsetY);
@@ -136,9 +134,8 @@ export class Maze {
         }
       }
     });
-
-
-    this.document.addEventListener('mousemove', e => {
+  
+    this.canvas.addEventListener('mousemove', e => {
       if (this.isBuilding) {
         if (this.inGrid(e.offsetX, e.offsetY)) {
           let [x, y] = this.convertToGrid(e.offsetX, e.offsetY)
@@ -147,7 +144,7 @@ export class Maze {
       }
     });
 
-    this.document.addEventListener('mouseup', e => {
+    this.canvas.addEventListener('mouseup', e => {
       if (this.isBuilding) {
         this.isBuilding = false;
       }

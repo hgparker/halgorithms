@@ -1,4 +1,3 @@
-import {createButton, createElement} from "./util";
 import {MazeController} from "./maze_controller";
 
 // Constants for switching between algorithm frames

@@ -35,14 +35,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "MainController": () => /* binding */ MainController
 /* harmony export */ });
-/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./js/util.js");
-/* harmony import */ var _maze_controller__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./maze_controller */ "./js/maze_controller.js");
+/* harmony import */ var _maze_controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze_controller */ "./js/maze_controller.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 
  // Constants for switching between algorithm frames
 
@@ -83,7 +81,7 @@ var MainController = /*#__PURE__*/function () {
   }, {
     key: "startMazeController",
     value: function startMazeController() {
-      this.mazeController = new _maze_controller__WEBPACK_IMPORTED_MODULE_1__.MazeController();
+      this.mazeController = new _maze_controller__WEBPACK_IMPORTED_MODULE_0__.MazeController();
     } // shut down this.mazeController
 
   }, {
@@ -152,11 +150,10 @@ var Maze = /*#__PURE__*/function () {
     // set up stuff with main canvas panel
     this.width = width;
     this.height = height;
-    this.document = canvas;
+    this.canvas = canvas;
     canvas.width = GRID_OFFSET * 2 + SQUARE_SIDE * width;
     canvas.height = GRID_OFFSET * 2 + SQUARE_SIDE * height;
-    this.ctx = canvas.getContext("2d"); // set up frame panel
-    // grid initialization
+    this.ctx = canvas.getContext("2d"); // grid initialization
 
     var row = [];
 
@@ -174,7 +171,7 @@ var Maze = /*#__PURE__*/function () {
     this.grid[this.width - 1][this.height - 1] = FINISH; // maze building initialization
 
     this.mazeBuilderOn = true;
-    this.mazeBuilderEvents(); // protecting callbacks
+    this.startMazeBuilderEvents(); // protecting callbacks
 
     this.solveBFS = this.solveBFS.bind(this);
     this.drawSquare = this.drawSquare.bind(this);
@@ -262,11 +259,11 @@ var Maze = /*#__PURE__*/function () {
     } // Set up events for maze building
 
   }, {
-    key: "mazeBuilderEvents",
-    value: function mazeBuilderEvents() {
+    key: "startMazeBuilderEvents",
+    value: function startMazeBuilderEvents() {
       var _this = this;
 
-      this.document.addEventListener('mousedown', function (e) {
+      this.canvas.addEventListener('mousedown', function (e) {
         if (_this.mazeBuilderOn) {
           if (_this.inGrid(e.offsetX, e.offsetY)) {
             var pos = _this.convertToGrid(e.offsetX, e.offsetY);
@@ -284,7 +281,7 @@ var Maze = /*#__PURE__*/function () {
           }
         }
       });
-      this.document.addEventListener('mousemove', function (e) {
+      this.canvas.addEventListener('mousemove', function (e) {
         if (_this.isBuilding) {
           if (_this.inGrid(e.offsetX, e.offsetY)) {
             var _this$convertToGrid = _this.convertToGrid(e.offsetX, e.offsetY),
@@ -296,7 +293,7 @@ var Maze = /*#__PURE__*/function () {
           }
         }
       });
-      this.document.addEventListener('mouseup', function (e) {
+      this.canvas.addEventListener('mouseup', function (e) {
         if (_this.isBuilding) {
           _this.isBuilding = false;
         }
@@ -463,12 +460,11 @@ var MazeController = /*#__PURE__*/function () {
     _classCallCheck(this, MazeController);
 
     // Set up main panels we'll need for mode control
-    this.mainCanvas = document.getElementById("main_canvas");
     (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", "nav_bar");
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "Create Maze", function () {
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "create_maze_button", "button", "Create Maze", function () {
       return _this.switchMode(CREATE_MAZE_MODE);
     });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "Solve Maze", function () {
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "solve_maze_button", "button", "Solve Maze", function () {
       return _this.switchMode(SOLVE_MAZE_MODE);
     }); // Initialize to pure create
 
@@ -492,15 +488,23 @@ var MazeController = /*#__PURE__*/function () {
       switch (mode) {
         case CREATE_MAZE_MODE:
           console.log("entering create_maze mode");
-          this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.mainCanvas);
+
+          if (this.canvas) {
+            (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas");
+          }
+
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_elements", "canvas", "canvas", "canvas");
+          this.canvas = document.getElementById("canvas");
+          this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"));
+          this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.canvas);
           this.maze.draw();
           break;
 
         case SOLVE_MAZE_MODE:
           // debugger;
           console.log("entering solve maze mode");
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "Solve with BFS", this.maze.solveBFS);
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "Solve with Mouse", this.maze.solveMouse);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_bfs_button", "button", "Solve with BFS", this.maze.solveBFS);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_mouse_button", "button", "Solve with Mouse", this.maze.solveMouse);
           break;
       }
 
@@ -518,6 +522,8 @@ var MazeController = /*#__PURE__*/function () {
 
         case SOLVE_MAZE_MODE:
           console.log("leaving solve_maze mode");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_button");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_button");
           break;
       }
     } // shut down whole component
@@ -561,11 +567,13 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 // DOM utilities
-function createButton(parentId, buttonText, buttonCallback) {
+function createButton(parentId, buttonId, buttonClass, buttonText, buttonCallback) {
   var parentElement = document.getElementById(parentId);
   var newButton = document.createElement("BUTTON");
   var text = document.createTextNode(buttonText);
   newButton.appendChild(text);
+  newButton.setAttribute("id", buttonId);
+  newButton.setAttribute("class", buttonClass);
   newButton.onclick = buttonCallback;
   parentElement.appendChild(newButton);
 }

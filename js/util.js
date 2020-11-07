@@ -2,11 +2,13 @@
 
 // DOM utilities
 
-export function createButton(parentId, buttonText, buttonCallback) {
+export function createButton(parentId, buttonId, buttonClass, buttonText, buttonCallback) {
   let parentElement = document.getElementById(parentId);
   let newButton = document.createElement("BUTTON");
   let text = document.createTextNode(buttonText);
   newButton.appendChild(text);
+  newButton.setAttribute("id", buttonId);
+  newButton.setAttribute("class", buttonClass);
   newButton.onclick = buttonCallback;
   parentElement.appendChild(newButton);
 }
