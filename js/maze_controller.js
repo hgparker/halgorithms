@@ -54,6 +54,7 @@ export class MazeController {
         console.log("entering solve maze mode");
         createButton("frame_panel", "solve_bfs_button", "Solve with BFS", {callback: this.maze.solveBFS});
         createButton("frame_panel", "solve_mouse_button", "Solve with Mouse", {callback: this.maze.solveMouse});      
+        createButton("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {callback: this.maze.solveManhattan});      
 
         break;
     }
@@ -70,7 +71,8 @@ export class MazeController {
       case SOLVE_MAZE_MODE:
         console.log("leaving solve_maze mode");
         removeElement("solve_bfs_button");
-        removeElement("solve_mouse_button")
+        removeElement("solve_mouse_button");
+        removeElement("solve_manhattan_button");
         break;
     }
   }

@@ -573,6 +573,9 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_mouse_button", "Solve with Mouse", {
             callback: this.maze.solveMouse
           });
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {
+            callback: this.maze.solveManhattan
+          });
           break;
       }
 
@@ -592,6 +595,7 @@ var MazeController = /*#__PURE__*/function () {
           console.log("leaving solve_maze mode");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_button");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_button");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_button");
           break;
       }
     } // shut down whole component
