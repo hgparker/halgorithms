@@ -1,4 +1,4 @@
-import {Queue} from './util';
+import {Queue, PriorityQueue} from './util';
 
 // meaning of grid values
 const EMPTY = 0;
@@ -41,11 +41,11 @@ export class Maze {
     this.startMazeBuilderEvents();
 
     // protecting callbacks
+    this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
     this.solveBFS = this.solveBFS.bind(this);
-    this.drawSquare = this.drawSquare.bind(this);
-    this.solveMouse = this.solveMouse.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
-    // this.drawSquare = this.drawSquare.bind(this);
+    this.solveMouse = this.solveMouse.bind(this);
+    this.solveManhattan = this.solveManhattan.bind(this);
   }
 
   // getters and setters
@@ -110,7 +110,6 @@ export class Maze {
   }
 
   // Flip a square between empty and wall
-
   flip(x,y) {
     if (this.grid[x][y] == this.flipTarget) {
       this.grid[x][y] = this.grid[x][y] == WALL ? EMPTY : WALL
@@ -119,7 +118,6 @@ export class Maze {
   }
 
   // Set up events for maze building
-
   startMazeBuilderEvents() {
     this.canvas.addEventListener('mousedown', e => {
       if (this.mazeBuilderOn) {
@@ -220,7 +218,6 @@ export class Maze {
       option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1]);
       newDirection = options[0];
     }
-      // newDirection = options[Math.floor(Math.random() * options.length)];
 
     if (options.length >= 3) {
       options = options.filter((option) =>
@@ -260,5 +257,47 @@ export class Maze {
     if (this.grid[neighborX][neighborY] == WALL)
       return false
     return true;
+  }
+
+  manhattan(pos1, pos2) {
+    return Math.abs(pos1[0]-pos2[0]) + Math.abs(pos1[1]-pos2[1]);
+  }
+
+  solveManhattan() {
+    let start = this.getStart();     
+    let q = new PriorityQueue((pos1, pos2) => {
+      let dist1 = this.manhattan(pos1, start);
+      let dist2 = this.manhattan(pos2, start);
+      if (dist1 < dist2)
+        return -1;
+      else if (dist1 > dist2)
+        return 1;
+      else
+        return 0;
+    });
+    let numSquares = 0;
+    q.add(start);  
+    while (q.length() > 0) {
+      let square = q.pop();
+      if (this.grid[square[0]][square[1]] === VISITED)
+        continue;
+      if (this.grid[square[0]][square[1]] === FINISH) {
+        console.log("finished");
+        break;
+      }
+
+      this.grid[square[0]][square[1]] = VISITED;
+      setTimeout(() => this.drawSquare(square[0], square[1]), 100*(numSquares + 1));
+      numSquares++;
+      
+      for (let d=0; d<4; d++) {
+        let neighborX = square[0] + DIRECTIONS[d][0];
+        let neighborY = square[1] + DIRECTIONS[d][1];
+        if (neighborX < 0 || neighborX >= this.width || neighborY < 0 || neighborY >= this.height)
+          continue;
+        if (this.grid[neighborX][neighborY] == EMPTY || this.grid[neighborX][neighborY] == FINISH)
+          q.add([neighborX, neighborY]);
+      }
+    }
   }
 }

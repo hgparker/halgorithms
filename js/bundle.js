@@ -173,10 +173,12 @@ var Maze = /*#__PURE__*/function () {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents(); // protecting callbacks
 
+    this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
+
     this.solveBFS = this.solveBFS.bind(this);
-    this.drawSquare = this.drawSquare.bind(this);
+    this.mouseMove = this.mouseMove.bind(this);
     this.solveMouse = this.solveMouse.bind(this);
-    this.mouseMove = this.mouseMove.bind(this); // this.drawSquare = this.drawSquare.bind(this);
+    this.solveManhattan = this.solveManhattan.bind(this);
   } // getters and setters
 
 
@@ -380,8 +382,7 @@ var Maze = /*#__PURE__*/function () {
           return option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1];
         });
         newDirection = options[0];
-      } // newDirection = options[Math.floor(Math.random() * options.length)];
-
+      }
 
       if (options.length >= 3) {
         options = options.filter(function (option) {
@@ -422,6 +423,57 @@ var Maze = /*#__PURE__*/function () {
       if (neighborX < 0 || neighborX >= this.width || neighborY < 0 || neighborY >= this.height) return false;
       if (this.grid[neighborX][neighborY] == WALL) return false;
       return true;
+    }
+  }, {
+    key: "manhattan",
+    value: function manhattan(pos1, pos2) {
+      return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
+    }
+  }, {
+    key: "solveManhattan",
+    value: function solveManhattan() {
+      var _this4 = this;
+
+      var start = this.getStart();
+      var q = new _util__WEBPACK_IMPORTED_MODULE_0__.PriorityQueue(function (pos1, pos2) {
+        var dist1 = _this4.manhattan(pos1, start);
+
+        var dist2 = _this4.manhattan(pos2, start);
+
+        if (dist1 < dist2) return -1;else if (dist1 > dist2) return 1;else return 0;
+      });
+      var numSquares = 0;
+      q.add(start);
+
+      var _loop2 = function _loop2() {
+        var square = q.pop();
+        if (_this4.grid[square[0]][square[1]] === VISITED) return "continue";
+
+        if (_this4.grid[square[0]][square[1]] === FINISH) {
+          console.log("finished");
+          return "break";
+        }
+
+        _this4.grid[square[0]][square[1]] = VISITED;
+        setTimeout(function () {
+          return _this4.drawSquare(square[0], square[1]);
+        }, 100 * (numSquares + 1));
+        numSquares++;
+
+        for (var d = 0; d < 4; d++) {
+          var neighborX = square[0] + DIRECTIONS[d][0];
+          var neighborY = square[1] + DIRECTIONS[d][1];
+          if (neighborX < 0 || neighborX >= _this4.width || neighborY < 0 || neighborY >= _this4.height) continue;
+          if (_this4.grid[neighborX][neighborY] == EMPTY || _this4.grid[neighborX][neighborY] == FINISH) q.add([neighborX, neighborY]);
+        }
+      };
+
+      while (q.length() > 0) {
+        var _ret2 = _loop2();
+
+        if (_ret2 === "continue") continue;
+        if (_ret2 === "break") break;
+      }
     }
   }]);
 
