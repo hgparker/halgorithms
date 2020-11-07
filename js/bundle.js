@@ -374,7 +374,14 @@ var Maze = /*#__PURE__*/function () {
       var options = this.getDirectionOptions(currentSquare);
       var newDirection = currentDirection;
       if (options.length == 1) newDirection = options[0];
-      if (options.length == 2 && !options.includes(currentDirection)) newDirection = options[Math.floor(Math.random() * options.length)];
+
+      if (options.length == 2 && !options.includes(currentDirection)) {
+        options = options.filter(function (option) {
+          return option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1];
+        });
+        newDirection = options[0];
+      } // newDirection = options[Math.floor(Math.random() * options.length)];
+
 
       if (options.length >= 3) {
         options = options.filter(function (option) {
