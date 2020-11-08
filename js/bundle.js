@@ -665,8 +665,8 @@ var MazeController = /*#__PURE__*/function () {
     value: function stopMode(mode) {
       switch (mode) {
         case CREATE_MAZE_MODE:
-          console.log("leaving create_maze mode"); // exit code here
-
+          console.log("leaving create_maze mode");
+          this.maze.mazeBuilderOn = false;
           break;
 
         case SOLVE_MAZE_MODE:

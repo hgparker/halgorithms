@@ -67,7 +67,7 @@ export class MazeController {
     switch (mode) {
       case CREATE_MAZE_MODE:
         console.log("leaving create_maze mode");
-      // exit code here
+        this.maze.mazeBuilderOn = false;
         break;
       case SOLVE_MAZE_MODE:
         console.log("leaving solve_maze mode");
@@ -75,7 +75,6 @@ export class MazeController {
         removeElement("solve_mouse_button");
         removeElement("solve_manhattan_button");
         removeElement("solve_right_button");
-
         break;
     }
   }
