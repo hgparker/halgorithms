@@ -36,9 +36,10 @@ export class Maze {
     this.grid[0][0] = START;
     this.grid[this.width-1][this.height-1] = FINISH;
 
-    // maze building initialization
+    // maze building & solving initialization 
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
+    this.solving = false;
 
     // protecting callbacks
     this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
@@ -152,6 +153,10 @@ export class Maze {
   }
   
   solveBFS() {
+    if (this.solving)
+      return;
+    this.solving = true;
+
     this.reload();
     let start = this.getStart();     
     let q = new Queue;
@@ -163,6 +168,7 @@ export class Maze {
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
         console.log("finished");
+        setTimeout(() => this.solving = false, 100*(numSquares+1));
         break;
       }
 
@@ -205,6 +211,10 @@ export class Maze {
   
   // Mouse algorithm
   solveMouse() {
+    if (this.solving)
+      return;
+    this.solving = true;
+
     this.reload();
     let currentSquare = this.getStart();     
     let options = this.getDirectionOptions(currentSquare);
@@ -219,8 +229,10 @@ export class Maze {
 
   mouseMove(currentSquare, currentDirection) {
   
-    if (this.getValue(currentSquare) == FINISH)
+    if (this.getValue(currentSquare) == FINISH) {
+      this.solving = false;
       return;
+    }
 
     let options = this.getDirectionOptions(currentSquare);
     let newDirection = currentDirection;
@@ -279,6 +291,10 @@ export class Maze {
   }
 
   solveManhattan() {
+    if (this.solving)
+      return;
+    this.solving = true;
+
     this.reload();
     let finish = this.getFinish();
     let start = this.getStart();
@@ -300,6 +316,7 @@ export class Maze {
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
         console.log("finished");
+        setTimeout(() => this.solving = false, 100*(numSquares+1));
         break;
       }
 
@@ -341,6 +358,9 @@ export class Maze {
   }
 
   solveRight() {
+    if (this.solving)
+      return;
+    this.solving = true;
     this.reload();
     let currentSquare = this.getStart();
     let currentDirectionIndex = 0; 
@@ -355,8 +375,10 @@ export class Maze {
   }
 
   rightMove(currentSquare, currentDirectionIndex) {
-    if (this.getValue(currentSquare) == FINISH)
+    if (this.getValue(currentSquare) == FINISH) {
+      this.solving = false;
       return;
+    }
 
     if (this.rightWallable(currentSquare, currentDirectionIndex)) {
       while (!this.acceptableDirection(currentSquare, DIRECTIONS[currentDirectionIndex]))

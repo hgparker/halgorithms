@@ -168,10 +168,11 @@ var Maze = /*#__PURE__*/function () {
     }
 
     this.grid[0][0] = START;
-    this.grid[this.width - 1][this.height - 1] = FINISH; // maze building initialization
+    this.grid[this.width - 1][this.height - 1] = FINISH; // maze building & solving initialization 
 
     this.mazeBuilderOn = true;
-    this.startMazeBuilderEvents(); // protecting callbacks
+    this.startMazeBuilderEvents();
+    this.solving = false; // protecting callbacks
 
     this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
 
@@ -308,6 +309,8 @@ var Maze = /*#__PURE__*/function () {
     value: function solveBFS() {
       var _this2 = this;
 
+      if (this.solving) return;
+      this.solving = true;
       this.reload();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
@@ -320,6 +323,9 @@ var Maze = /*#__PURE__*/function () {
 
         if (_this2.grid[square[0]][square[1]] === FINISH) {
           console.log("finished");
+          setTimeout(function () {
+            return _this2.solving = false;
+          }, 100 * (numSquares + 1));
           return "break";
         }
 
@@ -372,6 +378,8 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "solveMouse",
     value: function solveMouse() {
+      if (this.solving) return;
+      this.solving = true;
       this.reload();
       var currentSquare = this.getStart();
       var options = this.getDirectionOptions(currentSquare);
@@ -388,7 +396,11 @@ var Maze = /*#__PURE__*/function () {
     value: function mouseMove(currentSquare, currentDirection) {
       var _this3 = this;
 
-      if (this.getValue(currentSquare) == FINISH) return;
+      if (this.getValue(currentSquare) == FINISH) {
+        this.solving = false;
+        return;
+      }
+
       var options = this.getDirectionOptions(currentSquare);
       var newDirection = currentDirection;
       if (options.length == 1) newDirection = options[0];
@@ -450,6 +462,8 @@ var Maze = /*#__PURE__*/function () {
     value: function solveManhattan() {
       var _this4 = this;
 
+      if (this.solving) return;
+      this.solving = true;
       this.reload();
       var finish = this.getFinish();
       var start = this.getStart();
@@ -469,6 +483,9 @@ var Maze = /*#__PURE__*/function () {
 
         if (_this4.grid[square[0]][square[1]] === FINISH) {
           console.log("finished");
+          setTimeout(function () {
+            return _this4.solving = false;
+          }, 100 * (numSquares + 1));
           return "break";
         }
 
@@ -516,6 +533,8 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "solveRight",
     value: function solveRight() {
+      if (this.solving) return;
+      this.solving = true;
       this.reload();
       var currentSquare = this.getStart();
       var currentDirectionIndex = 0;
@@ -533,7 +552,10 @@ var Maze = /*#__PURE__*/function () {
     value: function rightMove(currentSquare, currentDirectionIndex) {
       var _this5 = this;
 
-      if (this.getValue(currentSquare) == FINISH) return;
+      if (this.getValue(currentSquare) == FINISH) {
+        this.solving = false;
+        return;
+      }
 
       if (this.rightWallable(currentSquare, currentDirectionIndex)) {
         while (!this.acceptableDirection(currentSquare, DIRECTIONS[currentDirectionIndex])) {
