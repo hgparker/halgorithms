@@ -13,7 +13,7 @@ const SQUARE_SIDE = 17;
 const SQUARE_PADDING = 1;
 
 // directions used in several algorithms
-const DIRECTIONS = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+const DIRECTIONS = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 
 export class Maze {
   constructor(width, height, canvas) {
@@ -46,6 +46,8 @@ export class Maze {
     this.mouseMove = this.mouseMove.bind(this);
     this.solveMouse = this.solveMouse.bind(this);
     this.solveManhattan = this.solveManhattan.bind(this);
+    this.rightMove = this.rightMove.bind(this);
+    this.solveRight = this.solveRight.bind(this);
   }
 
   // getters and setters
@@ -312,4 +314,63 @@ export class Maze {
       }
     }
   }
+
+  // Right algorithm routines
+
+  rightTurn(d) {
+    return (d+1)%4;
+  }
+
+  leftTurn(d) {
+    return (d+3)%4;
+  }
+
+  rightWallable(currentSquare, currentDirectionIndex) {
+    let right = this.rightTurn(currentDirectionIndex);
+    let forwardSquare = currentSquare.slice();
+    forwardSquare[0] += DIRECTIONS[right][0];
+    forwardSquare[1] += DIRECTIONS[right][1];
+    return forwardSquare[0] < 0 ||
+      forwardSquare[0] >= this.width ||
+      forwardSquare[1] < 0 ||
+      forwardSquare[1] >= this.height ||
+      this.getValue(forwardSquare) == WALL;
+  }
+
+  solveRight() {
+    let currentSquare = this.getStart();
+    let currentDirectionIndex = 0; 
+
+    let options = this.getDirectionOptions(currentSquare);
+    if (options.length == 0) {
+      console.log("game over man, game over");
+      return;
+    }
+
+    this.rightMove(currentSquare, currentDirectionIndex);
+  }
+
+  rightMove(currentSquare, currentDirectionIndex) {
+    if (this.getValue(currentSquare) == FINISH)
+      return;
+
+    if (this.rightWallable(currentSquare, currentDirectionIndex)) {
+      while (!this.acceptableDirection(currentSquare, DIRECTIONS[currentDirectionIndex]))
+        currentDirectionIndex = this.leftTurn(currentDirectionIndex);
+    } else
+      currentDirectionIndex = this.rightTurn(currentDirectionIndex);
+
+    if (this.getValue(currentSquare) == VISITED) {
+      this.setValue(currentSquare, EMPTY);
+      this.drawSquare(currentSquare[0], currentSquare[1]);
+    }
+
+    currentSquare[0] += DIRECTIONS[currentDirectionIndex][0];
+    currentSquare[1] += DIRECTIONS[currentDirectionIndex][1];
+ 
+    if (this.getValue(currentSquare) == EMPTY) 
+      this.setValue(currentSquare, VISITED);
+    this.drawSquare(currentSquare[0], currentSquare[1]);
+    setTimeout(() => this.rightMove(currentSquare, currentDirectionIndex), 100);
+  }    
 }

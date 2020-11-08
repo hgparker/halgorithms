@@ -142,7 +142,7 @@ var GRID_OFFSET = 3;
 var SQUARE_SIDE = 17;
 var SQUARE_PADDING = 1; // directions used in several algorithms
 
-var DIRECTIONS = [[-1, 0], [1, 0], [0, 1], [0, -1]];
+var DIRECTIONS = [[1, 0], [0, 1], [-1, 0], [0, -1]];
 var Maze = /*#__PURE__*/function () {
   function Maze(width, height, canvas) {
     _classCallCheck(this, Maze);
@@ -179,6 +179,8 @@ var Maze = /*#__PURE__*/function () {
     this.mouseMove = this.mouseMove.bind(this);
     this.solveMouse = this.solveMouse.bind(this);
     this.solveManhattan = this.solveManhattan.bind(this);
+    this.rightMove = this.rightMove.bind(this);
+    this.solveRight = this.solveRight.bind(this);
   } // getters and setters
 
 
@@ -487,6 +489,66 @@ var Maze = /*#__PURE__*/function () {
         if (_ret2 === "continue") continue;
         if (_ret2 === "break") break;
       }
+    } // Right algorithm routines
+
+  }, {
+    key: "rightTurn",
+    value: function rightTurn(d) {
+      return (d + 1) % 4;
+    }
+  }, {
+    key: "leftTurn",
+    value: function leftTurn(d) {
+      return (d + 3) % 4;
+    }
+  }, {
+    key: "rightWallable",
+    value: function rightWallable(currentSquare, currentDirectionIndex) {
+      var right = this.rightTurn(currentDirectionIndex);
+      var forwardSquare = currentSquare.slice();
+      forwardSquare[0] += DIRECTIONS[right][0];
+      forwardSquare[1] += DIRECTIONS[right][1];
+      return forwardSquare[0] < 0 || forwardSquare[0] >= this.width || forwardSquare[1] < 0 || forwardSquare[1] >= this.height || this.getValue(forwardSquare) == WALL;
+    }
+  }, {
+    key: "solveRight",
+    value: function solveRight() {
+      var currentSquare = this.getStart();
+      var currentDirectionIndex = 0;
+      var options = this.getDirectionOptions(currentSquare);
+
+      if (options.length == 0) {
+        console.log("game over man, game over");
+        return;
+      }
+
+      this.rightMove(currentSquare, currentDirectionIndex);
+    }
+  }, {
+    key: "rightMove",
+    value: function rightMove(currentSquare, currentDirectionIndex) {
+      var _this5 = this;
+
+      if (this.getValue(currentSquare) == FINISH) return;
+
+      if (this.rightWallable(currentSquare, currentDirectionIndex)) {
+        while (!this.acceptableDirection(currentSquare, DIRECTIONS[currentDirectionIndex])) {
+          currentDirectionIndex = this.leftTurn(currentDirectionIndex);
+        }
+      } else currentDirectionIndex = this.rightTurn(currentDirectionIndex);
+
+      if (this.getValue(currentSquare) == VISITED) {
+        this.setValue(currentSquare, EMPTY);
+        this.drawSquare(currentSquare[0], currentSquare[1]);
+      }
+
+      currentSquare[0] += DIRECTIONS[currentDirectionIndex][0];
+      currentSquare[1] += DIRECTIONS[currentDirectionIndex][1];
+      if (this.getValue(currentSquare) == EMPTY) this.setValue(currentSquare, VISITED);
+      this.drawSquare(currentSquare[0], currentSquare[1]);
+      setTimeout(function () {
+        return _this5.rightMove(currentSquare, currentDirectionIndex);
+      }, 100);
     }
   }]);
 
@@ -589,6 +651,9 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {
             callback: this.maze.solveManhattan
           });
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_right_button", "Solve with Right", {
+            callback: this.maze.solveRight
+          });
           break;
       }
 
@@ -609,6 +674,7 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_button");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_button");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_button");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_right_button");
           break;
       }
     } // shut down whole component
