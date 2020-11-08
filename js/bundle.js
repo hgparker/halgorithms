@@ -439,7 +439,6 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "manhattan",
     value: function manhattan(pos1, pos2) {
-      console.log("called with " + pos1 + " and " + pos2);
       return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
     }
   }, {
@@ -738,12 +737,10 @@ var PriorityQueue = /*#__PURE__*/function () {
     value: function add(element) {
       this.arr.push(element);
       this.swim(this.lastIndex());
-      console.log("post-add: " + this.arr);
     }
   }, {
     key: "swim",
     value: function swim(index) {
-      // debugger;
       while (Math.floor(index / 2) > 0 && this.cb(this.arr[Math.floor(index / 2)], this.arr[index]) == 1) {
         this.swap(Math.floor(index / 2), index);
         index = Math.floor(index / 2);
@@ -775,7 +772,6 @@ var PriorityQueue = /*#__PURE__*/function () {
       }
 
       this.arr.pop();
-      console.log("post-pop: " + this.arr);
       return retElement;
     }
   }, {

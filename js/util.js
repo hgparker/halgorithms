@@ -74,11 +74,9 @@ lastIndex() {
 add(element) {
   this.arr.push(element);
   this.swim(this.lastIndex());
-  console.log("post-add: " + this.arr)
 }
 
 swim(index) {
-  // debugger;
   while (Math.floor(index/2) > 0 && this.cb(this.arr[Math.floor(index/2)], this.arr[index]) == 1) {
     this.swap(Math.floor(index/2), index);
     index = Math.floor(index/2);
@@ -106,7 +104,6 @@ pop() {
     this.swim(index);
   }
   this.arr.pop();
-  console.log("post-pop: " + this.arr);
   return retElement;
 } 
 
