@@ -234,7 +234,7 @@ export class Maze {
       newDirection = options[0];
     }
 
-    if (options.length >= 3) {
+    if (options.length == 3) {
       options = options.filter((option) =>
         option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1]);
       newDirection = options[Math.floor(Math.random() * options.length)];

@@ -400,7 +400,7 @@ var Maze = /*#__PURE__*/function () {
         newDirection = options[0];
       }
 
-      if (options.length >= 3) {
+      if (options.length == 3) {
         options = options.filter(function (option) {
           return option[0] != -1 * currentDirection[0] || option[1] != -1 * currentDirection[1];
         });
