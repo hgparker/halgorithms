@@ -114,3 +114,8 @@ pop() {
   }
 }
 
+export function deepDup(arr) {
+  if (!(arr instanceof Array))
+    return arr
+  return arr.map(ele => deepDup(ele));
+}

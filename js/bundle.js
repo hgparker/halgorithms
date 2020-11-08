@@ -700,6 +700,7 @@ var MazeController = /*#__PURE__*/function () {
 /*! export Queue [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createButton [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createElement [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export deepDup [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export removeElement [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
 /*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
@@ -711,7 +712,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "createButton": () => /* binding */ createButton,
 /* harmony export */   "removeElement": () => /* binding */ removeElement,
 /* harmony export */   "Queue": () => /* binding */ Queue,
-/* harmony export */   "PriorityQueue": () => /* binding */ PriorityQueue
+/* harmony export */   "PriorityQueue": () => /* binding */ PriorityQueue,
+/* harmony export */   "deepDup": () => /* binding */ deepDup
 /* harmony export */ });
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -851,6 +853,12 @@ var PriorityQueue = /*#__PURE__*/function () {
 
   return PriorityQueue;
 }();
+function deepDup(arr) {
+  if (!(arr instanceof Array)) return arr;
+  return arr.map(function (ele) {
+    return deepDup(ele);
+  });
+}
 
 /***/ })
 
