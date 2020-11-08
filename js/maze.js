@@ -188,6 +188,17 @@ export class Maze {
     }
     console.log("didn't find a start!");
   }
+
+  // locate end of maze
+  getFinish() {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++) {
+        if (this.grid[x][y] == FINISH)
+          return [x,y];
+      }
+    }
+    console.log("didn't find a finish!");
+  }
   
   // Mouse algorithm
   solveMouse() {
@@ -260,14 +271,16 @@ export class Maze {
   }
 
   manhattan(pos1, pos2) {
+    console.log("called with " + pos1 + " and " + pos2);
     return Math.abs(pos1[0]-pos2[0]) + Math.abs(pos1[1]-pos2[1]);
   }
 
   solveManhattan() {
-    let start = this.getStart();     
+    let finish = this.getFinish();
+    let start = this.getStart();
     let q = new PriorityQueue((pos1, pos2) => {
-      let dist1 = this.manhattan(pos1, start);
-      let dist2 = this.manhattan(pos2, start);
+      let dist1 = this.manhattan(pos1, finish);
+      let dist2 = this.manhattan(pos2, finish);
       if (dist1 < dist2)
         return -1;
       else if (dist1 > dist2)

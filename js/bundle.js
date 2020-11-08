@@ -352,6 +352,18 @@ var Maze = /*#__PURE__*/function () {
       }
 
       console.log("didn't find a start!");
+    } // locate end of maze
+
+  }, {
+    key: "getFinish",
+    value: function getFinish() {
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          if (this.grid[x][y] == FINISH) return [x, y];
+        }
+      }
+
+      console.log("didn't find a finish!");
     } // Mouse algorithm
 
   }, {
@@ -427,6 +439,7 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "manhattan",
     value: function manhattan(pos1, pos2) {
+      console.log("called with " + pos1 + " and " + pos2);
       return Math.abs(pos1[0] - pos2[0]) + Math.abs(pos1[1] - pos2[1]);
     }
   }, {
@@ -434,11 +447,12 @@ var Maze = /*#__PURE__*/function () {
     value: function solveManhattan() {
       var _this4 = this;
 
+      var finish = this.getFinish();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.PriorityQueue(function (pos1, pos2) {
-        var dist1 = _this4.manhattan(pos1, start);
+        var dist1 = _this4.manhattan(pos1, finish);
 
-        var dist2 = _this4.manhattan(pos2, start);
+        var dist2 = _this4.manhattan(pos2, finish);
 
         if (dist1 < dist2) return -1;else if (dist1 > dist2) return 1;else return 0;
       });
@@ -705,7 +719,7 @@ var PriorityQueue = /*#__PURE__*/function () {
   function PriorityQueue(cb) {
     _classCallCheck(this, PriorityQueue);
 
-    this.arr = [0];
+    this.arr = [[-999, -999]];
     this.cb = cb;
   }
 
@@ -723,12 +737,14 @@ var PriorityQueue = /*#__PURE__*/function () {
     key: "add",
     value: function add(element) {
       this.arr.push(element);
-      swim(this.lastIndex());
+      this.swim(this.lastIndex());
+      console.log("post-add: " + this.arr);
     }
   }, {
     key: "swim",
     value: function swim(index) {
-      while (Math.floor(index / 2) > 0 && this.cb(this.arr[Math.floor(index / 2)], this.arr[index]) == -1) {
+      // debugger;
+      while (Math.floor(index / 2) > 0 && this.cb(this.arr[Math.floor(index / 2)], this.arr[index]) == 1) {
         this.swap(Math.floor(index / 2), index);
         index = Math.floor(index / 2);
       }
@@ -744,7 +760,7 @@ var PriorityQueue = /*#__PURE__*/function () {
         var left = 2 * index;
         var right = 2 * index + 1;
 
-        if (right <= this.lastIndex && this.arr[right] < this.arr[left]) {
+        if (right <= this.lastIndex() && this.cb(this.arr[right], this.arr[left]) == -1) {
           this.arr[index] = this.arr[right];
           index = right;
         } else {
@@ -753,9 +769,13 @@ var PriorityQueue = /*#__PURE__*/function () {
         }
       }
 
-      this.swap(index, this.lastIndex());
+      if (index != this.lastIndex()) {
+        this.swap(index, this.lastIndex());
+        this.swim(index);
+      }
+
       this.arr.pop();
-      this.swim(index);
+      console.log("post-pop: " + this.arr);
       return retElement;
     }
   }, {

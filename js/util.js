@@ -59,7 +59,7 @@ export class Queue {
 
 export class PriorityQueue {
  constructor(cb) {
-   this.arr = [0]
+   this.arr = [[-999, -999]]
    this.cb = cb;
  }
 
@@ -73,11 +73,13 @@ lastIndex() {
 
 add(element) {
   this.arr.push(element);
-  swim(this.lastIndex());
+  this.swim(this.lastIndex());
+  console.log("post-add: " + this.arr)
 }
 
 swim(index) {
-  while (Math.floor(index/2) > 0 && this.cb(this.arr[Math.floor(index/2)], this.arr[index]) == -1) {
+  // debugger;
+  while (Math.floor(index/2) > 0 && this.cb(this.arr[Math.floor(index/2)], this.arr[index]) == 1) {
     this.swap(Math.floor(index/2), index);
     index = Math.floor(index/2);
   }
@@ -91,7 +93,7 @@ pop() {
   while (2*index <= this.lastIndex()) {
     let left = 2*index;
     let right = 2*index+1;
-    if (right <= this.lastIndex && this.arr[right] < this.arr[left]) {
+    if (right <= this.lastIndex() && this.cb(this.arr[right], this.arr[left]) == -1) {
       this.arr[index] = this.arr[right];
       index = right;
     } else {
@@ -99,16 +101,19 @@ pop() {
       index = left;
     }
   }
-  this.swap(index, this.lastIndex());
+  if (index != this.lastIndex()) {
+    this.swap(index, this.lastIndex());
+    this.swim(index);
+  }
   this.arr.pop();
-  this.swim(index);
+  console.log("post-pop: " + this.arr);
   return retElement;
 } 
 
- swap(a, b) {
+  swap(a, b) {
   let temp = this.arr[a];
   this.arr[a] = this.arr[b];
   this.arr[b] = temp;
- }
+  }
 }
 
