@@ -308,6 +308,7 @@ var Maze = /*#__PURE__*/function () {
     value: function solveBFS() {
       var _this2 = this;
 
+      this.reload();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
       var numSquares = 0;
@@ -371,6 +372,7 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "solveMouse",
     value: function solveMouse() {
+      this.reload();
       var currentSquare = this.getStart();
       var options = this.getDirectionOptions(currentSquare);
 
@@ -448,6 +450,7 @@ var Maze = /*#__PURE__*/function () {
     value: function solveManhattan() {
       var _this4 = this;
 
+      this.reload();
       var finish = this.getFinish();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.PriorityQueue(function (pos1, pos2) {
@@ -513,6 +516,7 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "solveRight",
     value: function solveRight() {
+      this.reload();
       var currentSquare = this.getStart();
       var currentDirectionIndex = 0;
       var options = this.getDirectionOptions(currentSquare);
@@ -654,6 +658,7 @@ var MazeController = /*#__PURE__*/function () {
 
         case SOLVE_MAZE_MODE:
           console.log("entering solve maze mode");
+          this.maze.backup();
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_bfs_button", "Solve with BFS", {
             callback: this.maze.solveBFS
           });

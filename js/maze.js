@@ -152,6 +152,7 @@ export class Maze {
   }
   
   solveBFS() {
+    this.reload();
     let start = this.getStart();     
     let q = new Queue;
     let numSquares = 0;
@@ -204,6 +205,7 @@ export class Maze {
   
   // Mouse algorithm
   solveMouse() {
+    this.reload();
     let currentSquare = this.getStart();     
     let options = this.getDirectionOptions(currentSquare);
 
@@ -277,6 +279,7 @@ export class Maze {
   }
 
   solveManhattan() {
+    this.reload();
     let finish = this.getFinish();
     let start = this.getStart();
     let q = new PriorityQueue((pos1, pos2) => {
@@ -338,6 +341,7 @@ export class Maze {
   }
 
   solveRight() {
+    this.reload();
     let currentSquare = this.getStart();
     let currentDirectionIndex = 0; 
 

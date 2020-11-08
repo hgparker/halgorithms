@@ -50,14 +50,15 @@ export class MazeController {
         this.maze = new Maze(30, 30, this.canvas);
         this.maze.draw();
         break;
-      case SOLVE_MAZE_MODE:
-        console.log("entering solve maze mode");
-        createButton("frame_panel", "solve_bfs_button", "Solve with BFS", {callback: this.maze.solveBFS});
-        createButton("frame_panel", "solve_mouse_button", "Solve with Mouse", {callback: this.maze.solveMouse});      
-        createButton("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {callback: this.maze.solveManhattan});      
-        createButton("frame_panel", "solve_right_button", "Solve with Right", {callback: this.maze.solveRight});      
 
-        break;
+        case SOLVE_MAZE_MODE:
+          console.log("entering solve maze mode");
+          this.maze.backup();
+          createButton("frame_panel", "solve_bfs_button", "Solve with BFS", {callback: this.maze.solveBFS});
+          createButton("frame_panel", "solve_mouse_button", "Solve with Mouse", {callback: this.maze.solveMouse});      
+          createButton("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {callback: this.maze.solveManhattan});      
+          createButton("frame_panel", "solve_right_button", "Solve with Right", {callback: this.maze.solveRight});      
+          break;
     }
     this.currentMode = mode;
   }
