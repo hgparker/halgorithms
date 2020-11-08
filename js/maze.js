@@ -1,4 +1,4 @@
-import {Queue, PriorityQueue} from './util';
+import {Queue, PriorityQueue, deepDup} from './util';
 
 // meaning of grid values
 const EMPTY = 0;
@@ -372,5 +372,16 @@ export class Maze {
       this.setValue(currentSquare, VISITED);
     this.drawSquare(currentSquare[0], currentSquare[1]);
     setTimeout(() => this.rightMove(currentSquare, currentDirectionIndex), 100);
-  }    
+  }
+  
+  // Backup and reload methods
+
+  backup() {
+    this.backupGrid = deepDup(this.grid);
+  }
+
+  reload() {
+    this.grid = deepDup(this.backupGrid);
+    this.draw();
+  }
 }

@@ -549,6 +549,18 @@ var Maze = /*#__PURE__*/function () {
       setTimeout(function () {
         return _this5.rightMove(currentSquare, currentDirectionIndex);
       }, 100);
+    } // Backup and reload methods
+
+  }, {
+    key: "backup",
+    value: function backup() {
+      this.backupGrid = (0,_util__WEBPACK_IMPORTED_MODULE_0__.deepDup)(this.grid);
+    }
+  }, {
+    key: "reload",
+    value: function reload() {
+      this.grid = (0,_util__WEBPACK_IMPORTED_MODULE_0__.deepDup)(this.backupGrid);
+      this.draw();
     }
   }]);
 
