@@ -15,7 +15,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _main_controller__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./main_controller */ "./js/main_controller.js");
 
 document.addEventListener("DOMContentLoaded", function () {
-  console.log("Main.jss is running!");
   var mainControl = new _main_controller__WEBPACK_IMPORTED_MODULE_0__.MainController();
 });
 
@@ -112,6 +111,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "Maze": () => /* binding */ Maze
 /* harmony export */ });
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./js/util.js");
+/* harmony import */ var _maze_text__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./maze_text */ "./js/maze_text.js");
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
@@ -129,6 +129,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
  // meaning of grid values
 
@@ -173,7 +174,8 @@ var Maze = /*#__PURE__*/function () {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
-    this.delay = 100; // protecting callbacks
+    this.delay = 100;
+    (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", ""); // protecting callbacks
 
     this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
 
@@ -312,6 +314,8 @@ var Maze = /*#__PURE__*/function () {
 
       if (this.solving) return;
       this.solving = true;
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.bfsText);
       this.reload();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
@@ -323,7 +327,7 @@ var Maze = /*#__PURE__*/function () {
         if (_this2.grid[square[0]][square[1]] === VISITED) return "continue";
 
         if (_this2.grid[square[0]][square[1]] === FINISH) {
-          console.log("finished");
+          // console.log("finished");
           setTimeout(function () {
             return _this2.solving = false;
           }, _this2.delay * (numSquares + 1));
@@ -385,6 +389,8 @@ var Maze = /*#__PURE__*/function () {
     value: function solveMouse() {
       if (this.solving) return;
       this.solving = true;
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.mouseText);
       this.reload();
       var currentSquare = this.getStart();
       var options = this.getDirectionOptions(currentSquare);
@@ -469,6 +475,8 @@ var Maze = /*#__PURE__*/function () {
 
       if (this.solving) return;
       this.solving = true;
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.manhattanText);
       this.reload();
       var finish = this.getFinish();
       var start = this.getStart();
@@ -487,7 +495,7 @@ var Maze = /*#__PURE__*/function () {
         if (_this4.grid[square[0]][square[1]] === VISITED) return "continue";
 
         if (_this4.grid[square[0]][square[1]] === FINISH) {
-          console.log("finished");
+          // console.log("finished");
           setTimeout(function () {
             return _this4.solving = false;
           }, _this4.delay * (numSquares + 1));
@@ -544,6 +552,8 @@ var Maze = /*#__PURE__*/function () {
     value: function solveRight() {
       if (this.solving) return;
       this.solving = true;
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
+      (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.rightText);
       this.reload();
       var currentSquare = this.getStart();
       var currentDirectionIndex = 0;
@@ -620,11 +630,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _maze__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./maze */ "./js/maze.js");
 /* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util */ "./js/util.js");
+/* harmony import */ var _maze_text__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./maze_text */ "./js/maze_text.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
 
 
  // modes for MazeController
@@ -644,20 +656,17 @@ var MazeController = /*#__PURE__*/function () {
     (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", {
       className: "nav_bar"
     });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("maze_bar", "create_maze_button", "Create Maze", {
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("maze_bar", "create_maze_text_div", "Create Maze", {
       callback: function callback() {
         return _this.switchMode(CREATE_MAZE_MODE);
-      }
+      },
+      className: "selectable_element"
     });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "create_maze_button", "Create Maze", {
-      callback: function callback() {
-        return _this.switchMode(CREATE_MAZE_MODE);
-      }
-    });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "solve_maze_button", "Solve Maze", {
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("maze_bar", "solve_maze_text_div", "Solve Maze", {
       callback: function callback() {
         return _this.switchMode(SOLVE_MAZE_MODE);
-      }
+      },
+      className: "selectable_element"
     }); // Initialize to pure create
 
     this.startMode(CREATE_MAZE_MODE); // Protect callbacks
@@ -681,8 +690,7 @@ var MazeController = /*#__PURE__*/function () {
 
       switch (mode) {
         case CREATE_MAZE_MODE:
-          console.log("entering create_maze mode");
-
+          // console.log("entering create_maze mode")
           if (this.canvas) {
             (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas");
           }
@@ -692,22 +700,27 @@ var MazeController = /*#__PURE__*/function () {
           this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"));
           this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.canvas);
           this.maze.draw();
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "create_maze_text", _maze_text__WEBPACK_IMPORTED_MODULE_2__.createMazeText);
           break;
 
         case SOLVE_MAZE_MODE:
-          console.log("entering solve maze mode");
+          // console.log("entering solve maze mode");
           this.maze.backup();
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_bfs_button", "Solve with BFS", {
-            callback: this.maze.solveBFS
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "solve_bfs_text_div", "Solve with Breadth-First-Search", {
+            callback: this.maze.solveBFS,
+            className: "selectable_element"
           });
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_mouse_button", "Solve with Mouse", {
-            callback: this.maze.solveMouse
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "solve_mouse_text_div", "Solve with Random Mouse Algorithm", {
+            callback: this.maze.solveMouse,
+            className: "selectable_element"
           });
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {
-            callback: this.maze.solveManhattan
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "solve_manhattan_text_div", "Solve with the Manhattan Algorithm", {
+            callback: this.maze.solveManhattan,
+            className: "selectable_element"
           });
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_right_button", "Solve with Right", {
-            callback: this.maze.solveRight
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "solve_right_text_div", "Solve with Right-Hand Rule Algorithm", {
+            callback: this.maze.solveRight,
+            className: "selectable_element"
           });
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "form", "maze_speed_form");
           var maze_speed_form = document.getElementById("maze_speed_form");
@@ -733,16 +746,18 @@ var MazeController = /*#__PURE__*/function () {
     value: function stopMode(mode) {
       switch (mode) {
         case CREATE_MAZE_MODE:
-          console.log("leaving create_maze mode");
+          // console.log("leaving create_maze mode");
           this.maze.mazeBuilderOn = false;
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("create_maze_text");
           break;
 
         case SOLVE_MAZE_MODE:
-          console.log("leaving solve_maze mode");
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_button");
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_button");
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_button");
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_right_button");
+          // console.log("leaving solve_maze mode");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("algo_text");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_text_div");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_text_div");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_text_div");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_right_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("maze_speed_form");
           break;
       }
@@ -757,6 +772,36 @@ var MazeController = /*#__PURE__*/function () {
 
   return MazeController;
 }();
+
+/***/ }),
+
+/***/ "./js/maze_text.js":
+/*!*************************!*\
+  !*** ./js/maze_text.js ***!
+  \*************************/
+/*! namespace exports */
+/*! export bfsText [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export createMazeText [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export manhattanText [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export mouseText [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export rightText [provided] [no usage info] [missing usage info prevents renaming] */
+/*! other exports [not provided] [no usage info] */
+/*! runtime requirements: __webpack_require__.r, __webpack_exports__, __webpack_require__.d, __webpack_require__.* */
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "createMazeText": () => /* binding */ createMazeText,
+/* harmony export */   "bfsText": () => /* binding */ bfsText,
+/* harmony export */   "mouseText": () => /* binding */ mouseText,
+/* harmony export */   "manhattanText": () => /* binding */ manhattanText,
+/* harmony export */   "rightText": () => /* binding */ rightText
+/* harmony export */ });
+var createMazeText = "Directions: simply hold the mouse down over the grid and drag the cursor to create your desired path. You can erase in the same way. When you’re ready to see your maze solved, click Solve Maze";
+var bfsText = "Breadth-first search (BFS) begins by adding the start of the maze to a queue. Next, it repeatedly dequeues the very first node of the queue, and if the node is unvisited, marks it as visited and adds all of its accessible unvisited neighbors to the queue. It’s guaranteed to find the solution for any solvable maze in linear time (with respect to the total size of the maze). Furthermore, it also finds the shortest path from start to finish (note that this is not the same thing as touching the least number of squares in the course of trying to solve the maze). Watch BFS expand uniformly in all directions without prejudice. If you create a junction of paths, you can watch the algorithm suddenly split its attention, going both directions at once.";
+var mouseText = "The Random Mouse algorithm is pretty slow. For future iterations, you may want to jam that delay slider all the way to the left. The Random Mouse algorithm is also pretty simple. Much like a mouse, it simply tries to keep going in the same direction as long as it can. As soon as it can’t, it picks a new direction randomly from the directions available. If it comes to a junction, it picks a path randomly. This algorithm can be somewhat frustrating to watch. Nevertheless, as long as the maze is actually solvable, over a long enough time period the probability that Random Mouse will solve the maze goes to infinity.";
+var manhattanText = "The Manhattan algorithm is very similar to BFS. However, whereas BFS operates according to the FIFO (“first in, first out”) logic of the queue, the Manhattan algorithm gives every node a score consisting of the sum of its horizontal and vertical absolute differences from the maze finish and, at each moment, picks the highest-scoring node next to some node it’s previously visited. It removes the node from the priority queue, marks it as visited, and adds all of its unvisited, accessible neighbors to the priority queue. Always selecting the closest node from the priority queue comes at a price, however. Adding a node and removing the closest node from the priority queue each take O(logN) time, compared to the O(1) operations of enqueueing and dequeing in BFS. Try creating a maze that gets very close to the finish, then requires swerving considerably away from it. The Manhattan algorithm will shoot straight toward the finish before having to backfill and find another way closer.";
+var rightText = "The Right-Hand Rule algorithm is something you could use in a real-life maze. Simply keep walking with your right hand always touching a wall. Under certain starting constraints pertaining to maze orientation (satisfied here), you will always reach the end of the maze. Try creating a solvable maze that the Right-Hand Rule algorithm cannot solve. You will not succeed.";
 
 /***/ }),
 
@@ -809,7 +854,18 @@ function createButton(parentId, buttonId, buttonText) {
   var text = document.createTextNode(buttonText);
   newButton.appendChild(text);
 }
-function createTextDiv() {}
+function createTextDiv(parentId, id, text) {
+  var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+  var parentElement = document.getElementById(parentId);
+  var newElement = document.createElement("div");
+  var textElement = document.createTextNode(text);
+  newElement.appendChild(textElement);
+  newElement.setAttribute("id", id);
+  if (options.className) newElement.setAttribute("class", options.className);
+  if (options.callback) newElement.onclick = options.callback;
+  parentElement.appendChild(newElement);
+  return newElement;
+}
 function removeElement(id) {
   var element = document.getElementById(id);
   element.parentNode.removeChild(element);

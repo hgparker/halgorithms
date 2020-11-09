@@ -13,13 +13,13 @@
   padding: 10px;
 }
 
-.maze {
+.selectable_element {
   padding: 10px;
   color: black;
   background-color: white;
 }
 
-.maze:hover {
+.selectable_element:hover {
   color: white;
   background-color: black;
   
@@ -46,4 +46,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: 20px;
+  width: 500px;
 }

@@ -1,4 +1,5 @@
-import {Queue, PriorityQueue, deepDup} from './util';
+import {Queue, PriorityQueue, deepDup, removeElement, createTextDiv} from './util';
+import {bfsText, mouseText, manhattanText, rightText} from "./maze_text";
 
 // meaning of grid values
 const EMPTY = 0;
@@ -41,6 +42,8 @@ export class Maze {
     this.startMazeBuilderEvents();
     this.solving = false;
     this.delay = 100;
+
+    createTextDiv("frame_panel", "algo_text", "");
 
     // protecting callbacks
     this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
@@ -158,6 +161,9 @@ export class Maze {
       return;
     this.solving = true;
 
+    removeElement("algo_text");
+    createTextDiv("frame_panel", "algo_text", bfsText);
+
     this.reload();
     let start = this.getStart();     
     let q = new Queue;
@@ -168,7 +174,7 @@ export class Maze {
       if (this.grid[square[0]][square[1]] === VISITED)
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
-        console.log("finished");
+        // console.log("finished");
         setTimeout(() => this.solving = false, this.delay*(numSquares+1));
         break;
       }
@@ -216,6 +222,9 @@ export class Maze {
     if (this.solving)
       return;
     this.solving = true;
+
+    removeElement("algo_text");
+    createTextDiv("frame_panel", "algo_text", mouseText);
 
     this.reload();
     let currentSquare = this.getStart();     
@@ -297,6 +306,9 @@ export class Maze {
       return;
     this.solving = true;
 
+    removeElement("algo_text");
+    createTextDiv("frame_panel", "algo_text", manhattanText);
+
     this.reload();
     let finish = this.getFinish();
     let start = this.getStart();
@@ -317,7 +329,7 @@ export class Maze {
       if (this.grid[square[0]][square[1]] === VISITED)
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
-        console.log("finished");
+        // console.log("finished");
         setTimeout(() => this.solving = false, this.delay*(numSquares+1));
         break;
       }
@@ -364,6 +376,10 @@ export class Maze {
     if (this.solving)
       return;
     this.solving = true;
+
+    removeElement("algo_text");
+    createTextDiv("frame_panel", "algo_text", rightText);
+
     this.reload();
     let currentSquare = this.getStart();
     let currentDirectionIndex = 0; 
