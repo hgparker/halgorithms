@@ -2,7 +2,7 @@ Live site:
 
 https://hgparker.github.io/halgorithms/index.html
 
-![ScreenShot]("./Screenshot_1.png")
+![ScreenShot]("https://github.com/hgparker/halgorithms/edit/master/Screenshot_1.png")
 
 # Backgound
 
