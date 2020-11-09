@@ -1,5 +1,6 @@
 import {Maze} from "./maze";
-import { createButton, createElement, removeElement } from "./util";
+import { createButton, createElement, createTextDiv, removeElement } from "./util";
+import {createMazeText} from "./maze_text";
 
 // modes for MazeController
 // all use this.maze
@@ -13,8 +14,10 @@ export class MazeController {
 
     // Set up main panels we'll need for mode control
     createElement("frame_panel", "div", "maze_bar", {className: "nav_bar"});
-    createButton("maze_bar", "create_maze_button", "Create Maze", {callback: () => this.switchMode(CREATE_MAZE_MODE)});
-    createButton("maze_bar", "solve_maze_button", "Solve Maze", {callback: () => this.switchMode(SOLVE_MAZE_MODE)});
+    createTextDiv("maze_bar", "create_maze_text_div", "Create Maze",
+      {callback: () => this.switchMode(CREATE_MAZE_MODE), className: "selectable_element"})
+    createTextDiv("maze_bar", "solve_maze_text_div", "Solve Maze",
+    {callback: () => this.switchMode(SOLVE_MAZE_MODE), className: "selectable_element"});
 
 
     // Initialize to pure create
@@ -39,7 +42,7 @@ export class MazeController {
   startMode(mode) {
     switch (mode) {
       case CREATE_MAZE_MODE:
-        console.log("entering create_maze mode")
+        // console.log("entering create_maze mode")
         if (this.canvas) {
           removeElement("canvas");
         
@@ -49,15 +52,26 @@ export class MazeController {
         this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"))
         this.maze = new Maze(30, 30, this.canvas);
         this.maze.draw();
+
+        createTextDiv("frame_panel", "create_maze_text", createMazeText);
+
         break;
 
         case SOLVE_MAZE_MODE:
-          console.log("entering solve maze mode");
+          // console.log("entering solve maze mode");
           this.maze.backup();
-          createButton("frame_panel", "solve_bfs_button", "Solve with BFS", {callback: this.maze.solveBFS});
-          createButton("frame_panel", "solve_mouse_button", "Solve with Mouse", {callback: this.maze.solveMouse});      
-          createButton("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {callback: this.maze.solveManhattan});      
-          createButton("frame_panel", "solve_right_button", "Solve with Right", {callback: this.maze.solveRight});      
+
+
+          createTextDiv("frame_panel", "solve_bfs_text_div", "Solve with Breadth-First-Search",
+            {callback: this.maze.solveBFS, className: "selectable_element"});
+          createTextDiv("frame_panel", "solve_mouse_text_div", "Solve with Random Mouse Algorithm",
+            {callback: this.maze.solveMouse, className: "selectable_element"});      
+          createTextDiv("frame_panel", "solve_manhattan_text_div", "Solve with the Manhattan Algorithm",
+            {callback: this.maze.solveManhattan, className: "selectable_element"});      
+          createTextDiv("frame_panel", "solve_right_text_div", "Solve with Right-Hand Rule Algorithm",
+            {callback: this.maze.solveRight, className: "selectable_element"});      
+
+
           createElement("frame_panel", "form", "maze_speed_form");
           let maze_speed_form = document.getElementById("maze_speed_form");
           let maze_speed_text = document.createTextNode("Adjust delay");
@@ -78,15 +92,17 @@ export class MazeController {
   stopMode(mode) {
     switch (mode) {
       case CREATE_MAZE_MODE:
-        console.log("leaving create_maze mode");
+        // console.log("leaving create_maze mode");
         this.maze.mazeBuilderOn = false;
+        removeElement("create_maze_text");
         break;
       case SOLVE_MAZE_MODE:
-        console.log("leaving solve_maze mode");
-        removeElement("solve_bfs_button");
-        removeElement("solve_mouse_button");
-        removeElement("solve_manhattan_button");
-        removeElement("solve_right_button");
+        // console.log("leaving solve_maze mode");
+        removeElement("algo_text");
+        removeElement("solve_bfs_text_div");
+        removeElement("solve_mouse_text_div");
+        removeElement("solve_manhattan_text_div");
+        removeElement("solve_right_text_div");
         removeElement("maze_speed_form");
         break;
     }

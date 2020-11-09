@@ -13,6 +13,18 @@
   padding: 10px;
 }
 
+.selectable_element {
+  padding: 10px;
+  color: black;
+  background-color: white;
+}
+
+.selectable_element:hover {
+  color: white;
+  background-color: black;
+  
+}
+
 #frame_elements {
   display: flex;
   flex-direction: row;
@@ -34,4 +46,6 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-left: 20px;
+  width: 500px;
 }

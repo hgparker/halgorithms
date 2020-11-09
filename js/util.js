@@ -18,6 +18,20 @@ export function createButton(parentId, buttonId, buttonText, options = {}) {
   newButton.appendChild(text);
 }
 
+export function createTextDiv(parentId, id, text, options = {}) {
+  let parentElement = document.getElementById(parentId);
+  let newElement = document.createElement("div");
+  let textElement = document.createTextNode(text);
+  newElement.appendChild(textElement);
+  newElement.setAttribute("id", id);  
+  if (options.className)
+    newElement.setAttribute("class", options.className);
+  if (options.callback)
+    newElement.onclick = options.callback;
+  parentElement.appendChild(newElement);
+  return newElement;
+}
+
 export function removeElement(id) {
   let element = document.getElementById(id);
   element.parentNode.removeChild(element);
