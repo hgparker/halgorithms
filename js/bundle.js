@@ -693,6 +693,15 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("frame_panel", "solve_right_button", "Solve with Right", {
             callback: this.maze.solveRight
           });
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "form", "maze_speed_form");
+          var maze_speed_form = document.getElementById("maze_speed_form");
+          var maze_speed_text = document.createTextNode("Adjust delay");
+          maze_speed_form.appendChild(maze_speed_text);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("maze_speed_form", "input", "maze_speed_input");
+          var maze_speed_input = document.getElementById("maze_speed_input");
+          maze_speed_input.setAttribute("type", "range");
+          maze_speed_input.setAttribute("min", "10");
+          maze_speed_input.setAttribute("max", "500");
           break;
       }
 
@@ -714,6 +723,7 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_button");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_button");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_right_button");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("maze_speed_form");
           break;
       }
     } // shut down whole component
@@ -761,14 +771,6 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
 // DOM utilities
-// export function createElement(parentId, element, id, className) {
-//   let parentElement = document.getElementById(parentId);
-//   let newElement = document.createElement(element);
-//   newElement.setAttribute("id", id);  
-//   if (className)
-//     newElement.setAttribute("class", className);
-//   parentElement.appendChild(newElement);
-// }
 function createElement(parentId, element, id) {
   var options = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
   var parentElement = document.getElementById(parentId);

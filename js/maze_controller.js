@@ -58,6 +58,15 @@ export class MazeController {
           createButton("frame_panel", "solve_mouse_button", "Solve with Mouse", {callback: this.maze.solveMouse});      
           createButton("frame_panel", "solve_manhattan_button", "Solve with Manhattan", {callback: this.maze.solveManhattan});      
           createButton("frame_panel", "solve_right_button", "Solve with Right", {callback: this.maze.solveRight});      
+          createElement("frame_panel", "form", "maze_speed_form");
+          let maze_speed_form = document.getElementById("maze_speed_form");
+          let maze_speed_text = document.createTextNode("Adjust delay");
+          maze_speed_form.appendChild(maze_speed_text);
+          createElement("maze_speed_form", "input", "maze_speed_input");
+          let maze_speed_input = document.getElementById("maze_speed_input");
+          maze_speed_input.setAttribute("type", "range");
+          maze_speed_input.setAttribute("min", "10");
+          maze_speed_input.setAttribute("max", "500");
           break;
     }
     this.currentMode = mode;
@@ -76,6 +85,7 @@ export class MazeController {
         removeElement("solve_mouse_button");
         removeElement("solve_manhattan_button");
         removeElement("solve_right_button");
+        removeElement("maze_speed_form");
         break;
     }
   }

@@ -1,14 +1,5 @@
 // DOM utilities
 
-// export function createElement(parentId, element, id, className) {
-//   let parentElement = document.getElementById(parentId);
-//   let newElement = document.createElement(element);
-//   newElement.setAttribute("id", id);  
-//   if (className)
-//     newElement.setAttribute("class", className);
-//   parentElement.appendChild(newElement);
-// }
-
 export function createElement(parentId, element, id, options = {}) {
   let parentElement = document.getElementById(parentId);
   let newElement = document.createElement(element);
