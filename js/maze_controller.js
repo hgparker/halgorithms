@@ -13,6 +13,8 @@ export class MazeController {
 
     // Set up main panels we'll need for mode control
     createElement("frame_panel", "div", "maze_bar", {className: "nav_bar"});
+    createElement("maze_bar", "create_maze_button", "Create Maze", {callback: () => this.switchMode(CREATE_MAZE_MODE)});
+
     createButton("maze_bar", "create_maze_button", "Create Maze", {callback: () => this.switchMode(CREATE_MAZE_MODE)});
     createButton("maze_bar", "solve_maze_button", "Solve Maze", {callback: () => this.switchMode(SOLVE_MAZE_MODE)});
 

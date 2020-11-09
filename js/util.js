@@ -18,6 +18,10 @@ export function createButton(parentId, buttonId, buttonText, options = {}) {
   newButton.appendChild(text);
 }
 
+export function createTextDiv() {
+  
+}
+
 export function removeElement(id) {
   let element = document.getElementById(id);
   element.parentNode.removeChild(element);

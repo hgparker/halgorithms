@@ -13,6 +13,18 @@
   padding: 10px;
 }
 
+.maze {
+  padding: 10px;
+  color: black;
+  background-color: white;
+}
+
+.maze:hover {
+  color: white;
+  background-color: black;
+  
+}
+
 #frame_elements {
   display: flex;
   flex-direction: row;

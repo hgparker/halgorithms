@@ -644,6 +644,11 @@ var MazeController = /*#__PURE__*/function () {
     (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", {
       className: "nav_bar"
     });
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("maze_bar", "create_maze_button", "Create Maze", {
+      callback: function callback() {
+        return _this.switchMode(CREATE_MAZE_MODE);
+      }
+    });
     (0,_util__WEBPACK_IMPORTED_MODULE_1__.createButton)("maze_bar", "create_maze_button", "Create Maze", {
       callback: function callback() {
         return _this.switchMode(CREATE_MAZE_MODE);
@@ -764,6 +769,7 @@ var MazeController = /*#__PURE__*/function () {
 /*! export Queue [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createButton [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export createElement [provided] [no usage info] [missing usage info prevents renaming] */
+/*! export createTextDiv [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export deepDup [provided] [no usage info] [missing usage info prevents renaming] */
 /*! export removeElement [provided] [no usage info] [missing usage info prevents renaming] */
 /*! other exports [not provided] [no usage info] */
@@ -774,6 +780,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "createElement": () => /* binding */ createElement,
 /* harmony export */   "createButton": () => /* binding */ createButton,
+/* harmony export */   "createTextDiv": () => /* binding */ createTextDiv,
 /* harmony export */   "removeElement": () => /* binding */ removeElement,
 /* harmony export */   "Queue": () => /* binding */ Queue,
 /* harmony export */   "PriorityQueue": () => /* binding */ PriorityQueue,
@@ -802,6 +809,7 @@ function createButton(parentId, buttonId, buttonText) {
   var text = document.createTextNode(buttonText);
   newButton.appendChild(text);
 }
+function createTextDiv() {}
 function removeElement(id) {
   var element = document.getElementById(id);
   element.parentNode.removeChild(element);
