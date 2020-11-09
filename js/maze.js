@@ -40,6 +40,7 @@ export class Maze {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
+    this.delay = 100;
 
     // protecting callbacks
     this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
@@ -168,12 +169,12 @@ export class Maze {
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
         console.log("finished");
-        setTimeout(() => this.solving = false, 100*(numSquares+1));
+        setTimeout(() => this.solving = false, this.delay*(numSquares+1));
         break;
       }
 
       this.grid[square[0]][square[1]] = VISITED;
-      setTimeout(() => this.drawSquare(square[0], square[1]), 100*(numSquares + 1));
+      setTimeout(() => this.drawSquare(square[0], square[1]), this.delay*(numSquares + 1));
       numSquares++;
       
       for (let d=0; d<4; d++) {
@@ -185,6 +186,7 @@ export class Maze {
           q.enqueque([neighborX, neighborY]);
       }
     }
+    setTimeout(() => this.solving = false, this.delay * (numSquares+1));
   }
 
   // locate start of maze
@@ -264,7 +266,7 @@ export class Maze {
       this.setValue(currentSquare, VISITED);
     this.drawSquare(currentSquare[0], currentSquare[1]);
 
-    setTimeout(() => this.mouseMove(currentSquare, newDirection), 100);
+    setTimeout(() => this.mouseMove(currentSquare, newDirection), this.delay);
   }
 
   getDirectionOptions(square) {
@@ -316,12 +318,12 @@ export class Maze {
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
         console.log("finished");
-        setTimeout(() => this.solving = false, 100*(numSquares+1));
+        setTimeout(() => this.solving = false, this.delay*(numSquares+1));
         break;
       }
 
       this.grid[square[0]][square[1]] = VISITED;
-      setTimeout(() => this.drawSquare(square[0], square[1]), 100*(numSquares + 1));
+      setTimeout(() => this.drawSquare(square[0], square[1]), this.delay*(numSquares + 1));
       numSquares++;
       
       for (let d=0; d<4; d++) {
@@ -333,6 +335,7 @@ export class Maze {
           q.add([neighborX, neighborY]);
       }
     }
+    setTimeout(() => this.solving = false, this.delay * (numSquares+1));
   }
 
   // Right algorithm routines
@@ -397,7 +400,7 @@ export class Maze {
     if (this.getValue(currentSquare) == EMPTY) 
       this.setValue(currentSquare, VISITED);
     this.drawSquare(currentSquare[0], currentSquare[1]);
-    setTimeout(() => this.rightMove(currentSquare, currentDirectionIndex), 100);
+    setTimeout(() => this.rightMove(currentSquare, currentDirectionIndex), this.delay);
   }
   
   // Backup and reload methods

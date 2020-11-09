@@ -172,7 +172,8 @@ var Maze = /*#__PURE__*/function () {
 
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
-    this.solving = false; // protecting callbacks
+    this.solving = false;
+    this.delay = 100; // protecting callbacks
 
     this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
 
@@ -325,14 +326,14 @@ var Maze = /*#__PURE__*/function () {
           console.log("finished");
           setTimeout(function () {
             return _this2.solving = false;
-          }, 100 * (numSquares + 1));
+          }, _this2.delay * (numSquares + 1));
           return "break";
         }
 
         _this2.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
           return _this2.drawSquare(square[0], square[1]);
-        }, 100 * (numSquares + 1));
+        }, _this2.delay * (numSquares + 1));
         numSquares++;
 
         for (var d = 0; d < 4; d++) {
@@ -349,6 +350,10 @@ var Maze = /*#__PURE__*/function () {
         if (_ret === "continue") continue;
         if (_ret === "break") break;
       }
+
+      setTimeout(function () {
+        return _this2.solving = false;
+      }, this.delay * (numSquares + 1));
     } // locate start of maze
 
   }, {
@@ -430,7 +435,7 @@ var Maze = /*#__PURE__*/function () {
       this.drawSquare(currentSquare[0], currentSquare[1]);
       setTimeout(function () {
         return _this3.mouseMove(currentSquare, newDirection);
-      }, 100);
+      }, this.delay);
     }
   }, {
     key: "getDirectionOptions",
@@ -485,14 +490,14 @@ var Maze = /*#__PURE__*/function () {
           console.log("finished");
           setTimeout(function () {
             return _this4.solving = false;
-          }, 100 * (numSquares + 1));
+          }, _this4.delay * (numSquares + 1));
           return "break";
         }
 
         _this4.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
           return _this4.drawSquare(square[0], square[1]);
-        }, 100 * (numSquares + 1));
+        }, _this4.delay * (numSquares + 1));
         numSquares++;
 
         for (var d = 0; d < 4; d++) {
@@ -509,6 +514,10 @@ var Maze = /*#__PURE__*/function () {
         if (_ret2 === "continue") continue;
         if (_ret2 === "break") break;
       }
+
+      setTimeout(function () {
+        return _this4.solving = false;
+      }, this.delay * (numSquares + 1));
     } // Right algorithm routines
 
   }, {
@@ -574,7 +583,7 @@ var Maze = /*#__PURE__*/function () {
       this.drawSquare(currentSquare[0], currentSquare[1]);
       setTimeout(function () {
         return _this5.rightMove(currentSquare, currentDirectionIndex);
-      }, 100);
+      }, this.delay);
     } // Backup and reload methods
 
   }, {
@@ -663,6 +672,8 @@ var MazeController = /*#__PURE__*/function () {
   }, {
     key: "startMode",
     value: function startMode(mode) {
+      var _this2 = this;
+
       switch (mode) {
         case CREATE_MAZE_MODE:
           console.log("entering create_maze mode");
@@ -701,7 +712,11 @@ var MazeController = /*#__PURE__*/function () {
           var maze_speed_input = document.getElementById("maze_speed_input");
           maze_speed_input.setAttribute("type", "range");
           maze_speed_input.setAttribute("min", "10");
-          maze_speed_input.setAttribute("max", "500");
+          maze_speed_input.setAttribute("max", "200");
+          maze_speed_input.setAttribute("value", "80");
+          maze_speed_input.addEventListener("change", function (e) {
+            return _this2.maze.delay = document.getElementById("maze_speed_input").value;
+          });
           break;
       }
 

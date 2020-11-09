@@ -66,7 +66,9 @@ export class MazeController {
           let maze_speed_input = document.getElementById("maze_speed_input");
           maze_speed_input.setAttribute("type", "range");
           maze_speed_input.setAttribute("min", "10");
-          maze_speed_input.setAttribute("max", "500");
+          maze_speed_input.setAttribute("max", "200");
+          maze_speed_input.setAttribute("value", "80");
+          maze_speed_input.addEventListener("change", (e) => this.maze.delay = document.getElementById("maze_speed_input").value);
           break;
     }
     this.currentMode = mode;
