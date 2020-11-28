@@ -159,7 +159,7 @@ var Maze = /*#__PURE__*/function () {
     var row = [];
 
     for (var k = 0; k < width; k++) {
-      row.push(WALL);
+      row.push(EMPTY);
     }
 
     this.grid = [];
@@ -174,17 +174,20 @@ var Maze = /*#__PURE__*/function () {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
-    this.delay = 100;
+    this.solve = 0;
+    this.delay = 50;
     (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", ""); // protecting callbacks
 
-    this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
-
+    this.drawSquare = this.drawSquare.bind(this);
+    this.conditionalDrawSquare = this.conditionalDrawSquare.bind(this);
+    this.clearMaze = this.clearMaze.bind(this);
     this.solveBFS = this.solveBFS.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.solveMouse = this.solveMouse.bind(this);
     this.solveManhattan = this.solveManhattan.bind(this);
     this.rightMove = this.rightMove.bind(this);
     this.solveRight = this.solveRight.bind(this);
+    this.reload = this.reload.bind(this);
   } // getters and setters
 
 
@@ -243,6 +246,26 @@ var Maze = /*#__PURE__*/function () {
       }
 
       this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);
+    } // drawSquare(x,y) 
+
+  }, {
+    key: "conditionalDrawSquare",
+    value: function conditionalDrawSquare(x, y, solve) {
+      if (this.solve === solve) this.drawSquare(x, y);else console.log("conditional drawsq failed");
+    } // clear maze 
+
+  }, {
+    key: "clearMaze",
+    value: function clearMaze() {
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          this.grid[x][y] = EMPTY;
+        }
+      }
+
+      this.grid[0][0] = START;
+      this.grid[this.width - 1][this.height - 1] = FINISH;
+      this.draw();
     } // is mouse in mazeGrid
 
   }, {
@@ -313,10 +336,12 @@ var Maze = /*#__PURE__*/function () {
       var _this2 = this;
 
       if (this.solving) return;
-      this.solving = true;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.bfsText);
       this.reload();
+      this.solving = true;
+      this.solve += 1;
+      var solve = this.solve;
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
       var numSquares = 0;
@@ -327,16 +352,13 @@ var Maze = /*#__PURE__*/function () {
         if (_this2.grid[square[0]][square[1]] === VISITED) return "continue";
 
         if (_this2.grid[square[0]][square[1]] === FINISH) {
-          // console.log("finished");
-          setTimeout(function () {
-            return _this2.solving = false;
-          }, _this2.delay * (numSquares + 1));
+          // setTimeout(() => this.solving = false, this.delay*(numSquares+1));
           return "break";
         }
 
         _this2.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
-          return _this2.drawSquare(square[0], square[1]);
+          return _this2.conditionalDrawSquare(square[0], square[1], solve);
         }, _this2.delay * (numSquares + 1));
         numSquares++;
 
@@ -354,10 +376,6 @@ var Maze = /*#__PURE__*/function () {
         if (_ret === "continue") continue;
         if (_ret === "break") break;
       }
-
-      setTimeout(function () {
-        return _this2.solving = false;
-      }, this.delay * (numSquares + 1));
     } // locate start of maze
 
   }, {
@@ -388,10 +406,11 @@ var Maze = /*#__PURE__*/function () {
     key: "solveMouse",
     value: function solveMouse() {
       if (this.solving) return;
+      this.reload();
       this.solving = true;
+      this.solve += 1;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.mouseText);
-      this.reload();
       var currentSquare = this.getStart();
       var options = this.getDirectionOptions(currentSquare);
 
@@ -406,6 +425,8 @@ var Maze = /*#__PURE__*/function () {
     key: "mouseMove",
     value: function mouseMove(currentSquare, currentDirection) {
       var _this3 = this;
+
+      if (!this.solving) return;
 
       if (this.getValue(currentSquare) == FINISH) {
         this.solving = false;
@@ -474,10 +495,12 @@ var Maze = /*#__PURE__*/function () {
       var _this4 = this;
 
       if (this.solving) return;
+      this.reload();
       this.solving = true;
+      this.solve += 1;
+      var solve = this.solve;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.manhattanText);
-      this.reload();
       var finish = this.getFinish();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.PriorityQueue(function (pos1, pos2) {
@@ -495,7 +518,6 @@ var Maze = /*#__PURE__*/function () {
         if (_this4.grid[square[0]][square[1]] === VISITED) return "continue";
 
         if (_this4.grid[square[0]][square[1]] === FINISH) {
-          // console.log("finished");
           setTimeout(function () {
             return _this4.solving = false;
           }, _this4.delay * (numSquares + 1));
@@ -504,7 +526,7 @@ var Maze = /*#__PURE__*/function () {
 
         _this4.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
-          return _this4.drawSquare(square[0], square[1]);
+          return _this4.conditionalDrawSquare(square[0], square[1], solve);
         }, _this4.delay * (numSquares + 1));
         numSquares++;
 
@@ -521,11 +543,8 @@ var Maze = /*#__PURE__*/function () {
 
         if (_ret2 === "continue") continue;
         if (_ret2 === "break") break;
-      }
+      } // setTimeout(() => this.solving = false, this.delay * (numSquares+1));
 
-      setTimeout(function () {
-        return _this4.solving = false;
-      }, this.delay * (numSquares + 1));
     } // Right algorithm routines
 
   }, {
@@ -551,10 +570,11 @@ var Maze = /*#__PURE__*/function () {
     key: "solveRight",
     value: function solveRight() {
       if (this.solving) return;
+      this.reload();
       this.solving = true;
+      this.solve += 1;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.rightText);
-      this.reload();
       var currentSquare = this.getStart();
       var currentDirectionIndex = 0;
       var options = this.getDirectionOptions(currentSquare);
@@ -570,6 +590,8 @@ var Maze = /*#__PURE__*/function () {
     key: "rightMove",
     value: function rightMove(currentSquare, currentDirectionIndex) {
       var _this5 = this;
+
+      if (!this.solving) return;
 
       if (this.getValue(currentSquare) == FINISH) {
         this.solving = false;
@@ -605,6 +627,8 @@ var Maze = /*#__PURE__*/function () {
     key: "reload",
     value: function reload() {
       this.grid = (0,_util__WEBPACK_IMPORTED_MODULE_0__.deepDup)(this.backupGrid);
+      this.solving = false;
+      this.solve += 1;
       this.draw();
     }
   }]);
@@ -690,7 +714,6 @@ var MazeController = /*#__PURE__*/function () {
 
       switch (mode) {
         case CREATE_MAZE_MODE:
-          // console.log("entering create_maze mode")
           if (this.canvas) {
             (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas");
           }
@@ -701,10 +724,13 @@ var MazeController = /*#__PURE__*/function () {
           this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.canvas);
           this.maze.draw();
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "create_maze_text", _maze_text__WEBPACK_IMPORTED_MODULE_2__.createMazeText);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "clear_maze_text_div", "Clear Maze", {
+            callback: this.maze.clearMaze,
+            className: "selectable_element"
+          });
           break;
 
         case SOLVE_MAZE_MODE:
-          // console.log("entering solve maze mode");
           this.maze.backup();
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "solve_bfs_text_div", "Solve with Breadth-First-Search", {
             callback: this.maze.solveBFS,
@@ -735,6 +761,10 @@ var MazeController = /*#__PURE__*/function () {
           maze_speed_input.addEventListener("change", function (e) {
             return _this2.maze.delay = document.getElementById("maze_speed_input").value;
           });
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "reset_maze_text_div", "Reset Maze", {
+            callback: this.maze.reload,
+            className: "selectable_element"
+          });
           break;
       }
 
@@ -749,6 +779,7 @@ var MazeController = /*#__PURE__*/function () {
           // console.log("leaving create_maze mode");
           this.maze.mazeBuilderOn = false;
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("create_maze_text");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("clear_maze_text_div");
           break;
 
         case SOLVE_MAZE_MODE:
@@ -759,6 +790,7 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_right_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("maze_speed_form");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("reset_maze_text_div");
           break;
       }
     } // shut down whole component
@@ -797,7 +829,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "manhattanText": () => /* binding */ manhattanText,
 /* harmony export */   "rightText": () => /* binding */ rightText
 /* harmony export */ });
-var createMazeText = "Directions: simply hold the mouse down over the grid and drag the cursor to create your desired path. You can erase in the same way. When you’re ready to see your maze solved, click Solve Maze";
+var createMazeText = "Directions: simply hold the mouse down over the grid and drag the cursor to create your desired path. You can erase in the same way. When you’re ready to see your maze solved, click Solve Maze. When creating the maze, remember that movement on the grid by the maze-solver is only possible upwards, leftwards, rightwards, or downwards. *No* diagonal movement.";
 var bfsText = "Breadth-first search (BFS) begins by adding the start of the maze to a queue. Next, it repeatedly dequeues the very first node of the queue, and if the node is unvisited, marks it as visited and adds all of its accessible unvisited neighbors to the queue. It’s guaranteed to find the solution for any solvable maze in linear time (with respect to the total size of the maze). Furthermore, it also finds the shortest path from start to finish (note that this is not the same thing as touching the least number of squares in the course of trying to solve the maze). Watch BFS expand uniformly in all directions without prejudice. If you create a junction of paths, you can watch the algorithm suddenly split its attention, going both directions at once.";
 var mouseText = "The Random Mouse algorithm is pretty slow. For future iterations, you may want to jam that delay slider all the way to the left. The Random Mouse algorithm is also pretty simple. Much like a mouse, it simply tries to keep going in the same direction as long as it can. As soon as it can’t, it picks a new direction randomly from the directions available. If it comes to a junction, it picks a path randomly. This algorithm can be somewhat frustrating to watch. Nevertheless, as long as the maze is actually solvable, over a long enough time period the probability that Random Mouse will solve the maze goes to infinity.";
 var manhattanText = "The Manhattan algorithm is very similar to BFS. However, whereas BFS operates according to the FIFO (“first in, first out”) logic of the queue, the Manhattan algorithm gives every node a score consisting of the sum of its horizontal and vertical absolute differences from the maze finish and, at each moment, picks the highest-scoring node next to some node it’s previously visited. It removes the node from the priority queue, marks it as visited, and adds all of its unvisited, accessible neighbors to the priority queue. Always selecting the closest node from the priority queue comes at a price, however. Adding a node and removing the closest node from the priority queue each take O(logN) time, compared to the O(1) operations of enqueueing and dequeing in BFS. Try creating a maze that gets very close to the finish, then requires swerving considerably away from it. The Manhattan algorithm will shoot straight toward the finish before having to backfill and find another way closer.";
