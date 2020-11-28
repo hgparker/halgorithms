@@ -159,7 +159,7 @@ var Maze = /*#__PURE__*/function () {
     var row = [];
 
     for (var k = 0; k < width; k++) {
-      row.push(WALL);
+      row.push(EMPTY);
     }
 
     this.grid = [];

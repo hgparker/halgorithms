@@ -29,7 +29,7 @@ export class Maze {
     // grid initialization
     let row = [];
     for (let k = 0; k < width; k++)
-      row.push(WALL);
+      row.push(EMPTY);
     this.grid = [];
     for (let k = 0; k < height; k++)
       this.grid.push(row.slice());
