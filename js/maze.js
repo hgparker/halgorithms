@@ -110,12 +110,9 @@ export class Maze {
   conditionalDrawSquare(x, y, solve) {
     if (this.solve === solve)
       this.drawSquare(x,y);
-    else
-      console.log("conditional drawsq failed");
   }
 
   // clear maze 
-
   clearMaze() {
     for (let x = 0; x < this.width; x++) {
       for (let y = 0; y < this.height; y++)
@@ -200,10 +197,8 @@ export class Maze {
       let square = q.dequeque();
       if (this.grid[square[0]][square[1]] === VISITED)
         continue;
-      if (this.grid[square[0]][square[1]] === FINISH) {
-        // setTimeout(() => this.solving = false, this.delay*(numSquares+1));
+      if (this.grid[square[0]][square[1]] === FINISH)
         break;
-      }
 
       this.grid[square[0]][square[1]] = VISITED;
       setTimeout(() => this.conditionalDrawSquare(square[0], square[1], solve), this.delay*(numSquares + 1));
@@ -376,7 +371,6 @@ export class Maze {
           q.add([neighborX, neighborY]);
       }
     }
-    // setTimeout(() => this.solving = false, this.delay * (numSquares+1));
   }
 
   // Right algorithm routines

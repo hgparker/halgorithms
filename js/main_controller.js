@@ -3,7 +3,6 @@ import {MazeController} from "./maze_controller";
 // Constants for switching between algorithm frames
 
 const MAZE_CONTROLLER = "MAZE_CONTROLLER";
-// this.mazeController
 
 
 // Main class used for switching between algorithm frames

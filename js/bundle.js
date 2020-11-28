@@ -43,8 +43,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
  // Constants for switching between algorithm frames
 
-var MAZE_CONTROLLER = "MAZE_CONTROLLER"; // this.mazeController
-// Main class used for switching between algorithm frames
+var MAZE_CONTROLLER = "MAZE_CONTROLLER"; // Main class used for switching between algorithm frames
 
 var MainController = /*#__PURE__*/function () {
   function MainController() {
@@ -251,7 +250,7 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "conditionalDrawSquare",
     value: function conditionalDrawSquare(x, y, solve) {
-      if (this.solve === solve) this.drawSquare(x, y);else console.log("conditional drawsq failed");
+      if (this.solve === solve) this.drawSquare(x, y);
     } // clear maze 
 
   }, {
@@ -350,12 +349,7 @@ var Maze = /*#__PURE__*/function () {
       var _loop = function _loop() {
         var square = q.dequeque();
         if (_this2.grid[square[0]][square[1]] === VISITED) return "continue";
-
-        if (_this2.grid[square[0]][square[1]] === FINISH) {
-          // setTimeout(() => this.solving = false, this.delay*(numSquares+1));
-          return "break";
-        }
-
+        if (_this2.grid[square[0]][square[1]] === FINISH) return "break";
         _this2.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
           return _this2.conditionalDrawSquare(square[0], square[1], solve);
@@ -543,8 +537,7 @@ var Maze = /*#__PURE__*/function () {
 
         if (_ret2 === "continue") continue;
         if (_ret2 === "break") break;
-      } // setTimeout(() => this.solving = false, this.delay * (numSquares+1));
-
+      }
     } // Right algorithm routines
 
   }, {
@@ -664,7 +657,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
  // modes for MazeController
-// all use this.maze
 
 var CREATE_MAZE_MODE = 'CREATE_MAZE_MODE';
 var DEFAULT_MAZE_MODE = "DEFAULT_MAZE_MODE";
@@ -776,14 +768,12 @@ var MazeController = /*#__PURE__*/function () {
     value: function stopMode(mode) {
       switch (mode) {
         case CREATE_MAZE_MODE:
-          // console.log("leaving create_maze mode");
           this.maze.mazeBuilderOn = false;
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("create_maze_text");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("clear_maze_text_div");
           break;
 
         case SOLVE_MAZE_MODE:
-          // console.log("leaving solve_maze mode");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("algo_text");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_text_div");
