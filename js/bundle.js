@@ -43,8 +43,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
  // Constants for switching between algorithm frames
 
-var MAZE_CONTROLLER = "MAZE_CONTROLLER"; // this.mazeController
-// Main class used for switching between algorithm frames
+var MAZE_CONTROLLER = "MAZE_CONTROLLER"; // Main class used for switching between algorithm frames
 
 var MainController = /*#__PURE__*/function () {
   function MainController() {
@@ -251,7 +250,7 @@ var Maze = /*#__PURE__*/function () {
   }, {
     key: "conditionalDrawSquare",
     value: function conditionalDrawSquare(x, y, solve) {
-      if (this.solve === solve) this.drawSquare(x, y);else console.log("conditional drawsq failed");
+      if (this.solve === solve) this.drawSquare(x, y);
     } // clear maze 
 
   }, {
@@ -350,12 +349,7 @@ var Maze = /*#__PURE__*/function () {
       var _loop = function _loop() {
         var square = q.dequeque();
         if (_this2.grid[square[0]][square[1]] === VISITED) return "continue";
-
-        if (_this2.grid[square[0]][square[1]] === FINISH) {
-          // setTimeout(() => this.solving = false, this.delay*(numSquares+1));
-          return "break";
-        }
-
+        if (_this2.grid[square[0]][square[1]] === FINISH) return "break";
         _this2.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
           return _this2.conditionalDrawSquare(square[0], square[1], solve);
@@ -543,8 +537,7 @@ var Maze = /*#__PURE__*/function () {
 
         if (_ret2 === "continue") continue;
         if (_ret2 === "break") break;
-      } // setTimeout(() => this.solving = false, this.delay * (numSquares+1));
-
+      }
     } // Right algorithm routines
 
   }, {
@@ -664,7 +657,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 
  // modes for MazeController
-// all use this.maze
 
 var CREATE_MAZE_MODE = 'CREATE_MAZE_MODE';
 var DEFAULT_MAZE_MODE = "DEFAULT_MAZE_MODE";
@@ -776,14 +768,12 @@ var MazeController = /*#__PURE__*/function () {
     value: function stopMode(mode) {
       switch (mode) {
         case CREATE_MAZE_MODE:
-          // console.log("leaving create_maze mode");
           this.maze.mazeBuilderOn = false;
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("create_maze_text");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("clear_maze_text_div");
           break;
 
         case SOLVE_MAZE_MODE:
-          // console.log("leaving solve_maze mode");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("algo_text");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_bfs_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_mouse_text_div");
@@ -829,7 +819,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "manhattanText": () => /* binding */ manhattanText,
 /* harmony export */   "rightText": () => /* binding */ rightText
 /* harmony export */ });
-var createMazeText = "Directions: simply hold the mouse down over the grid and drag the cursor to create your desired path. You can erase in the same way. When you’re ready to see your maze solved, click Solve Maze. When creating the maze, remember that movement on the grid by the maze-solver is only possible upwards, leftwards, rightwards, or downwards. *No* diagonal movement.";
+var createMazeText = "Directions: simply hold the mouse down over the grid and drag the cursor to create your desired walls. You can erase in the same way. When you’re ready to see your maze solved, click Solve Maze. When creating the maze, remember that movement on the grid by the maze-solver is only possible upwards, leftwards, rightwards, or downwards. *No* diagonal movement.";
 var bfsText = "Breadth-first search (BFS) begins by adding the start of the maze to a queue. Next, it repeatedly dequeues the very first node of the queue, and if the node is unvisited, marks it as visited and adds all of its accessible unvisited neighbors to the queue. It’s guaranteed to find the solution for any solvable maze in linear time (with respect to the total size of the maze). Furthermore, it also finds the shortest path from start to finish (note that this is not the same thing as touching the least number of squares in the course of trying to solve the maze). Watch BFS expand uniformly in all directions without prejudice. If you create a junction of paths, you can watch the algorithm suddenly split its attention, going both directions at once.";
 var mouseText = "The Random Mouse algorithm is pretty slow. For future iterations, you may want to jam that delay slider all the way to the left. The Random Mouse algorithm is also pretty simple. Much like a mouse, it simply tries to keep going in the same direction as long as it can. As soon as it can’t, it picks a new direction randomly from the directions available. If it comes to a junction, it picks a path randomly. This algorithm can be somewhat frustrating to watch. Nevertheless, as long as the maze is actually solvable, over a long enough time period the probability that Random Mouse will solve the maze goes to infinity.";
 var manhattanText = "The Manhattan algorithm is very similar to BFS. However, whereas BFS operates according to the FIFO (“first in, first out”) logic of the queue, the Manhattan algorithm gives every node a score consisting of the sum of its horizontal and vertical absolute differences from the maze finish and, at each moment, picks the highest-scoring node next to some node it’s previously visited. It removes the node from the priority queue, marks it as visited, and adds all of its unvisited, accessible neighbors to the priority queue. Always selecting the closest node from the priority queue comes at a price, however. Adding a node and removing the closest node from the priority queue each take O(logN) time, compared to the O(1) operations of enqueueing and dequeing in BFS. Try creating a maze that gets very close to the finish, then requires swerving considerably away from it. The Manhattan algorithm will shoot straight toward the finish before having to backfill and find another way closer.";
