@@ -174,10 +174,12 @@ var Maze = /*#__PURE__*/function () {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
+    this.solve = 0;
     this.delay = 50;
     (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", ""); // protecting callbacks
 
     this.drawSquare = this.drawSquare.bind(this);
+    this.conditionalDrawSquare = this.conditionalDrawSquare.bind(this);
     this.clearMaze = this.clearMaze.bind(this);
     this.solveBFS = this.solveBFS.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
@@ -244,6 +246,12 @@ var Maze = /*#__PURE__*/function () {
       }
 
       this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);
+    } // drawSquare(x,y) 
+
+  }, {
+    key: "conditionalDrawSquare",
+    value: function conditionalDrawSquare(x, y, solve) {
+      if (this.solve === solve) this.drawSquare(x, y);else console.log("conditional drawsq failed");
     } // clear maze 
 
   }, {
@@ -328,10 +336,12 @@ var Maze = /*#__PURE__*/function () {
       var _this2 = this;
 
       if (this.solving) return;
-      this.solving = true;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.bfsText);
       this.reload();
+      this.solving = true;
+      this.solve += 1;
+      var solve = this.solve;
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.Queue();
       var numSquares = 0;
@@ -342,16 +352,13 @@ var Maze = /*#__PURE__*/function () {
         if (_this2.grid[square[0]][square[1]] === VISITED) return "continue";
 
         if (_this2.grid[square[0]][square[1]] === FINISH) {
-          // console.log("finished");
-          setTimeout(function () {
-            return _this2.solving = false;
-          }, _this2.delay * (numSquares + 1));
+          // setTimeout(() => this.solving = false, this.delay*(numSquares+1));
           return "break";
         }
 
         _this2.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
-          return _this2.drawSquare(square[0], square[1]);
+          return _this2.conditionalDrawSquare(square[0], square[1], solve);
         }, _this2.delay * (numSquares + 1));
         numSquares++;
 
@@ -369,10 +376,6 @@ var Maze = /*#__PURE__*/function () {
         if (_ret === "continue") continue;
         if (_ret === "break") break;
       }
-
-      setTimeout(function () {
-        return _this2.solving = false;
-      }, this.delay * (numSquares + 1));
     } // locate start of maze
 
   }, {
@@ -403,10 +406,11 @@ var Maze = /*#__PURE__*/function () {
     key: "solveMouse",
     value: function solveMouse() {
       if (this.solving) return;
+      this.reload();
       this.solving = true;
+      this.solve += 1;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.mouseText);
-      this.reload();
       var currentSquare = this.getStart();
       var options = this.getDirectionOptions(currentSquare);
 
@@ -421,6 +425,8 @@ var Maze = /*#__PURE__*/function () {
     key: "mouseMove",
     value: function mouseMove(currentSquare, currentDirection) {
       var _this3 = this;
+
+      if (!this.solving) return;
 
       if (this.getValue(currentSquare) == FINISH) {
         this.solving = false;
@@ -489,10 +495,12 @@ var Maze = /*#__PURE__*/function () {
       var _this4 = this;
 
       if (this.solving) return;
+      this.reload();
       this.solving = true;
+      this.solve += 1;
+      var solve = this.solve;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.manhattanText);
-      this.reload();
       var finish = this.getFinish();
       var start = this.getStart();
       var q = new _util__WEBPACK_IMPORTED_MODULE_0__.PriorityQueue(function (pos1, pos2) {
@@ -510,7 +518,6 @@ var Maze = /*#__PURE__*/function () {
         if (_this4.grid[square[0]][square[1]] === VISITED) return "continue";
 
         if (_this4.grid[square[0]][square[1]] === FINISH) {
-          // console.log("finished");
           setTimeout(function () {
             return _this4.solving = false;
           }, _this4.delay * (numSquares + 1));
@@ -519,7 +526,7 @@ var Maze = /*#__PURE__*/function () {
 
         _this4.grid[square[0]][square[1]] = VISITED;
         setTimeout(function () {
-          return _this4.drawSquare(square[0], square[1]);
+          return _this4.conditionalDrawSquare(square[0], square[1], solve);
         }, _this4.delay * (numSquares + 1));
         numSquares++;
 
@@ -536,11 +543,8 @@ var Maze = /*#__PURE__*/function () {
 
         if (_ret2 === "continue") continue;
         if (_ret2 === "break") break;
-      }
+      } // setTimeout(() => this.solving = false, this.delay * (numSquares+1));
 
-      setTimeout(function () {
-        return _this4.solving = false;
-      }, this.delay * (numSquares + 1));
     } // Right algorithm routines
 
   }, {
@@ -566,10 +570,11 @@ var Maze = /*#__PURE__*/function () {
     key: "solveRight",
     value: function solveRight() {
       if (this.solving) return;
+      this.reload();
       this.solving = true;
+      this.solve += 1;
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.removeElement)("algo_text");
       (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", _maze_text__WEBPACK_IMPORTED_MODULE_1__.rightText);
-      this.reload();
       var currentSquare = this.getStart();
       var currentDirectionIndex = 0;
       var options = this.getDirectionOptions(currentSquare);
@@ -585,6 +590,8 @@ var Maze = /*#__PURE__*/function () {
     key: "rightMove",
     value: function rightMove(currentSquare, currentDirectionIndex) {
       var _this5 = this;
+
+      if (!this.solving) return;
 
       if (this.getValue(currentSquare) == FINISH) {
         this.solving = false;
@@ -620,6 +627,8 @@ var Maze = /*#__PURE__*/function () {
     key: "reload",
     value: function reload() {
       this.grid = (0,_util__WEBPACK_IMPORTED_MODULE_0__.deepDup)(this.backupGrid);
+      this.solving = false;
+      this.solve += 1;
       this.draw();
     }
   }]);
@@ -671,7 +680,7 @@ var MazeController = /*#__PURE__*/function () {
     (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", {
       className: "nav_bar"
     });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("maze_bar", "create_maze_text_div", "Create New Maze", {
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("maze_bar", "create_maze_text_div", "Create Maze", {
       callback: function callback() {
         return _this.switchMode(CREATE_MAZE_MODE);
       },

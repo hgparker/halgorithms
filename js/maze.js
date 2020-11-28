@@ -41,12 +41,14 @@ export class Maze {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
+    this.solve = 0;
     this.delay = 50;
 
     createTextDiv("frame_panel", "algo_text", "");
 
     // protecting callbacks
     this.drawSquare = this.drawSquare.bind(this);
+    this.conditionalDrawSquare = this.conditionalDrawSquare.bind(this);
     this.clearMaze = this.clearMaze.bind(this);
     this.solveBFS = this.solveBFS.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
@@ -103,6 +105,15 @@ export class Maze {
     this.ctx.fillRect(GRID_OFFSET + x*SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y*SQUARE_SIDE + SQUARE_PADDING,
       SQUARE_SIDE - 2*SQUARE_PADDING, SQUARE_SIDE - 2*SQUARE_PADDING );
   }
+
+  // drawSquare(x,y) 
+  conditionalDrawSquare(x, y, solve) {
+    if (this.solve === solve)
+      this.drawSquare(x,y);
+    else
+      console.log("conditional drawsq failed");
+  }
+
   // clear maze 
 
   clearMaze() {
@@ -172,12 +183,15 @@ export class Maze {
   solveBFS() {
     if (this.solving)
       return;
-    this.solving = true;
 
     removeElement("algo_text");
     createTextDiv("frame_panel", "algo_text", bfsText);
 
     this.reload();
+    this.solving = true;
+    this.solve += 1;
+    let solve = this.solve
+
     let start = this.getStart();     
     let q = new Queue;
     let numSquares = 0;
@@ -187,13 +201,12 @@ export class Maze {
       if (this.grid[square[0]][square[1]] === VISITED)
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
-        // console.log("finished");
-        setTimeout(() => this.solving = false, this.delay*(numSquares+1));
+        // setTimeout(() => this.solving = false, this.delay*(numSquares+1));
         break;
       }
 
       this.grid[square[0]][square[1]] = VISITED;
-      setTimeout(() => this.drawSquare(square[0], square[1]), this.delay*(numSquares + 1));
+      setTimeout(() => this.conditionalDrawSquare(square[0], square[1], solve), this.delay*(numSquares + 1));
       numSquares++;
       
       for (let d=0; d<4; d++) {
@@ -205,7 +218,6 @@ export class Maze {
           q.enqueque([neighborX, neighborY]);
       }
     }
-    setTimeout(() => this.solving = false, this.delay * (numSquares+1));
   }
 
   // locate start of maze
@@ -234,12 +246,13 @@ export class Maze {
   solveMouse() {
     if (this.solving)
       return;
+    this.reload();
     this.solving = true;
+    this.solve += 1;
 
     removeElement("algo_text");
     createTextDiv("frame_panel", "algo_text", mouseText);
 
-    this.reload();
     let currentSquare = this.getStart();     
     let options = this.getDirectionOptions(currentSquare);
 
@@ -252,7 +265,9 @@ export class Maze {
   }
 
   mouseMove(currentSquare, currentDirection) {
-  
+    if (!this.solving)
+      return;
+    
     if (this.getValue(currentSquare) == FINISH) {
       this.solving = false;
       return;
@@ -317,12 +332,14 @@ export class Maze {
   solveManhattan() {
     if (this.solving)
       return;
+    this.reload();
     this.solving = true;
+    this.solve += 1;
+    let solve = this.solve; 
 
     removeElement("algo_text");
     createTextDiv("frame_panel", "algo_text", manhattanText);
 
-    this.reload();
     let finish = this.getFinish();
     let start = this.getStart();
     let q = new PriorityQueue((pos1, pos2) => {
@@ -342,13 +359,12 @@ export class Maze {
       if (this.grid[square[0]][square[1]] === VISITED)
         continue;
       if (this.grid[square[0]][square[1]] === FINISH) {
-        // console.log("finished");
         setTimeout(() => this.solving = false, this.delay*(numSquares+1));
         break;
       }
 
       this.grid[square[0]][square[1]] = VISITED;
-      setTimeout(() => this.drawSquare(square[0], square[1]), this.delay*(numSquares + 1));
+      setTimeout(() => this.conditionalDrawSquare(square[0], square[1], solve), this.delay*(numSquares + 1));
       numSquares++;
       
       for (let d=0; d<4; d++) {
@@ -360,7 +376,7 @@ export class Maze {
           q.add([neighborX, neighborY]);
       }
     }
-    setTimeout(() => this.solving = false, this.delay * (numSquares+1));
+    // setTimeout(() => this.solving = false, this.delay * (numSquares+1));
   }
 
   // Right algorithm routines
@@ -388,12 +404,13 @@ export class Maze {
   solveRight() {
     if (this.solving)
       return;
+    this.reload();
     this.solving = true;
+    this.solve += 1;
 
     removeElement("algo_text");
     createTextDiv("frame_panel", "algo_text", rightText);
 
-    this.reload();
     let currentSquare = this.getStart();
     let currentDirectionIndex = 0; 
 
@@ -407,6 +424,9 @@ export class Maze {
   }
 
   rightMove(currentSquare, currentDirectionIndex) {
+    if (!this.solving)
+      return;
+
     if (this.getValue(currentSquare) == FINISH) {
       this.solving = false;
       return;
@@ -440,6 +460,8 @@ export class Maze {
 
   reload() {
     this.grid = deepDup(this.backupGrid);
+    this.solving = false;
+    this.solve += 1;
     this.draw();
   }
 }

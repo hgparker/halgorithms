@@ -14,7 +14,7 @@ export class MazeController {
 
     // Set up main panels we'll need for mode control
     createElement("frame_panel", "div", "maze_bar", {className: "nav_bar"});
-    createTextDiv("maze_bar", "create_maze_text_div", "Create New Maze",
+    createTextDiv("maze_bar", "create_maze_text_div", "Create Maze",
       {callback: () => this.switchMode(CREATE_MAZE_MODE), className: "selectable_element"})
     createTextDiv("maze_bar", "solve_maze_text_div", "Solve Maze",
     {callback: () => this.switchMode(SOLVE_MAZE_MODE), className: "selectable_element"});

@@ -22,7 +22,7 @@
 .selectable_element:hover {
   color: white;
   background-color: black;
-  
+  cursor: pointer;
 }
 
 #frame_elements {
