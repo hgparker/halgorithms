@@ -102,7 +102,7 @@ export class Maze {
     this.ctx.fillRect(GRID_OFFSET + x*SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y*SQUARE_SIDE + SQUARE_PADDING,
       SQUARE_SIDE - 2*SQUARE_PADDING, SQUARE_SIDE - 2*SQUARE_PADDING );
   }
-  // clear maze
+  // clear maze 
 
   clearMaze() {
     for (let x = 0; x < this.width; x++) {

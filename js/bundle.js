@@ -243,7 +243,7 @@ var Maze = /*#__PURE__*/function () {
       }
 
       this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);
-    } // clear maze
+    } // clear maze 
 
   }, {
     key: "clearMaze",
