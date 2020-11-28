@@ -185,6 +185,7 @@ var Maze = /*#__PURE__*/function () {
     this.solveManhattan = this.solveManhattan.bind(this);
     this.rightMove = this.rightMove.bind(this);
     this.solveRight = this.solveRight.bind(this);
+    this.reload = this.reload.bind(this);
   } // getters and setters
 
 
@@ -670,7 +671,7 @@ var MazeController = /*#__PURE__*/function () {
     (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_panel", "div", "maze_bar", {
       className: "nav_bar"
     });
-    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("maze_bar", "create_maze_text_div", "Create Maze", {
+    (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("maze_bar", "create_maze_text_div", "Create New Maze", {
       callback: function callback() {
         return _this.switchMode(CREATE_MAZE_MODE);
       },
@@ -721,7 +722,6 @@ var MazeController = /*#__PURE__*/function () {
           break;
 
         case SOLVE_MAZE_MODE:
-          // console.log("entering solve maze mode");
           this.maze.backup();
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "solve_bfs_text_div", "Solve with Breadth-First-Search", {
             callback: this.maze.solveBFS,
@@ -752,6 +752,10 @@ var MazeController = /*#__PURE__*/function () {
           maze_speed_input.addEventListener("change", function (e) {
             return _this2.maze.delay = document.getElementById("maze_speed_input").value;
           });
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "reset_maze_text_div", "Reset Maze", {
+            callback: this.maze.reload,
+            className: "selectable_element"
+          });
           break;
       }
 
@@ -777,6 +781,7 @@ var MazeController = /*#__PURE__*/function () {
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_manhattan_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("solve_right_text_div");
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("maze_speed_form");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("reset_maze_text_div");
           break;
       }
     } // shut down whole component

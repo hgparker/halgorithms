@@ -14,7 +14,7 @@ export class MazeController {
 
     // Set up main panels we'll need for mode control
     createElement("frame_panel", "div", "maze_bar", {className: "nav_bar"});
-    createTextDiv("maze_bar", "create_maze_text_div", "Create Maze",
+    createTextDiv("maze_bar", "create_maze_text_div", "Create New Maze",
       {callback: () => this.switchMode(CREATE_MAZE_MODE), className: "selectable_element"})
     createTextDiv("maze_bar", "solve_maze_text_div", "Solve Maze",
     {callback: () => this.switchMode(SOLVE_MAZE_MODE), className: "selectable_element"});
@@ -59,9 +59,7 @@ export class MazeController {
         break;
 
         case SOLVE_MAZE_MODE:
-          // console.log("entering solve maze mode");
           this.maze.backup();
-
 
           createTextDiv("frame_panel", "solve_bfs_text_div", "Solve with Breadth-First-Search",
             {callback: this.maze.solveBFS, className: "selectable_element"});
@@ -71,7 +69,6 @@ export class MazeController {
             {callback: this.maze.solveManhattan, className: "selectable_element"});      
           createTextDiv("frame_panel", "solve_right_text_div", "Solve with Right-Hand Rule Algorithm",
             {callback: this.maze.solveRight, className: "selectable_element"});      
-
 
           createElement("frame_panel", "form", "maze_speed_form");
           let maze_speed_form = document.getElementById("maze_speed_form");
@@ -84,6 +81,9 @@ export class MazeController {
           maze_speed_input.setAttribute("max", "200");
           maze_speed_input.setAttribute("value", "80");
           maze_speed_input.addEventListener("change", (e) => this.maze.delay = document.getElementById("maze_speed_input").value);
+
+          createTextDiv("frame_panel", "reset_maze_text_div", "Reset Maze",
+          {callback: this.maze.reload, className: "selectable_element"});     
           break;
     }
     this.currentMode = mode;
@@ -106,6 +106,7 @@ export class MazeController {
         removeElement("solve_manhattan_text_div");
         removeElement("solve_right_text_div");
         removeElement("maze_speed_form");
+        removeElement("reset_maze_text_div");
         break;
     }
   }

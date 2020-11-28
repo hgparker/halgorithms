@@ -54,6 +54,7 @@ export class Maze {
     this.solveManhattan = this.solveManhattan.bind(this);
     this.rightMove = this.rightMove.bind(this);
     this.solveRight = this.solveRight.bind(this);
+    this.reload = this.reload.bind(this);
   }
 
   // getters and setters
