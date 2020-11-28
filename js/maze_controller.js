@@ -42,7 +42,6 @@ export class MazeController {
   startMode(mode) {
     switch (mode) {
       case CREATE_MAZE_MODE:
-        // console.log("entering create_maze mode")
         if (this.canvas) {
           removeElement("canvas");
         
@@ -54,6 +53,8 @@ export class MazeController {
         this.maze.draw();
 
         createTextDiv("frame_panel", "create_maze_text", createMazeText);
+        createTextDiv("frame_panel", "clear_maze_text_div", "Clear Maze",
+          {callback: this.maze.clearMaze, className: "selectable_element"});
 
         break;
 
@@ -95,6 +96,7 @@ export class MazeController {
         // console.log("leaving create_maze mode");
         this.maze.mazeBuilderOn = false;
         removeElement("create_maze_text");
+        removeElement("clear_maze_text_div");
         break;
       case SOLVE_MAZE_MODE:
         // console.log("leaving solve_maze mode");

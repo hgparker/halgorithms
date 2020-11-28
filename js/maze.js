@@ -41,12 +41,13 @@ export class Maze {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
-    this.delay = 100;
+    this.delay = 50;
 
     createTextDiv("frame_panel", "algo_text", "");
 
     // protecting callbacks
-    this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
+    this.drawSquare = this.drawSquare.bind(this);
+    this.clearMaze = this.clearMaze.bind(this);
     this.solveBFS = this.solveBFS.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.solveMouse = this.solveMouse.bind(this);
@@ -100,6 +101,17 @@ export class Maze {
     }
     this.ctx.fillRect(GRID_OFFSET + x*SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y*SQUARE_SIDE + SQUARE_PADDING,
       SQUARE_SIDE - 2*SQUARE_PADDING, SQUARE_SIDE - 2*SQUARE_PADDING );
+  }
+  // clear maze
+
+  clearMaze() {
+    for (let x = 0; x < this.width; x++) {
+      for (let y = 0; y < this.height; y++)
+        this.grid[x][y] = EMPTY;
+    }
+    this.grid[0][0] = START;
+    this.grid[this.width-1][this.height-1] = FINISH;
+    this.draw();
   }
 
   // is mouse in mazeGrid

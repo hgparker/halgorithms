@@ -174,11 +174,11 @@ var Maze = /*#__PURE__*/function () {
     this.mazeBuilderOn = true;
     this.startMazeBuilderEvents();
     this.solving = false;
-    this.delay = 100;
+    this.delay = 50;
     (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", ""); // protecting callbacks
 
-    this.drawSquare = this.drawSquare.bind(this); // see if really need this at some point
-
+    this.drawSquare = this.drawSquare.bind(this);
+    this.clearMaze = this.clearMaze.bind(this);
     this.solveBFS = this.solveBFS.bind(this);
     this.mouseMove = this.mouseMove.bind(this);
     this.solveMouse = this.solveMouse.bind(this);
@@ -243,6 +243,20 @@ var Maze = /*#__PURE__*/function () {
       }
 
       this.ctx.fillRect(GRID_OFFSET + x * SQUARE_SIDE + SQUARE_PADDING, GRID_OFFSET + y * SQUARE_SIDE + SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING, SQUARE_SIDE - 2 * SQUARE_PADDING);
+    } // clear maze
+
+  }, {
+    key: "clearMaze",
+    value: function clearMaze() {
+      for (var x = 0; x < this.width; x++) {
+        for (var y = 0; y < this.height; y++) {
+          this.grid[x][y] = EMPTY;
+        }
+      }
+
+      this.grid[0][0] = START;
+      this.grid[this.width - 1][this.height - 1] = FINISH;
+      this.draw();
     } // is mouse in mazeGrid
 
   }, {
@@ -690,7 +704,6 @@ var MazeController = /*#__PURE__*/function () {
 
       switch (mode) {
         case CREATE_MAZE_MODE:
-          // console.log("entering create_maze mode")
           if (this.canvas) {
             (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas");
           }
@@ -701,6 +714,10 @@ var MazeController = /*#__PURE__*/function () {
           this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.canvas);
           this.maze.draw();
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "create_maze_text", _maze_text__WEBPACK_IMPORTED_MODULE_2__.createMazeText);
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "clear_maze_text_div", "Clear Maze", {
+            callback: this.maze.clearMaze,
+            className: "selectable_element"
+          });
           break;
 
         case SOLVE_MAZE_MODE:
@@ -749,6 +766,7 @@ var MazeController = /*#__PURE__*/function () {
           // console.log("leaving create_maze mode");
           this.maze.mazeBuilderOn = false;
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("create_maze_text");
+          (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("clear_maze_text_div");
           break;
 
         case SOLVE_MAZE_MODE:
