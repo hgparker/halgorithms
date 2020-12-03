@@ -34,7 +34,8 @@ export function createTextDiv(parentId, id, text, options = {}) {
 
 export function removeElement(id) {
   let element = document.getElementById(id);
-  element.parentNode.removeChild(element);
+  if (element)
+    element.parentNode.removeChild(element);
 }
 
 // DSA utilities

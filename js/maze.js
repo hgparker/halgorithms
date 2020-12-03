@@ -44,8 +44,6 @@ export class Maze {
     this.solve = 0;
     this.delay = 50;
 
-    createTextDiv("frame_panel", "algo_text", "");
-
     // protecting callbacks
     this.drawSquare = this.drawSquare.bind(this);
     this.conditionalDrawSquare = this.conditionalDrawSquare.bind(this);
@@ -402,6 +400,7 @@ export class Maze {
     this.solving = true;
     this.solve += 1;
 
+    
     removeElement("algo_text");
     createTextDiv("frame_panel", "algo_text", rightText);
 
