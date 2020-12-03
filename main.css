@@ -16,6 +16,7 @@
   width: 100%;
   align-items: center;
   justify-content: center;
+  padding: 10px;
   font-size: xx-large;
   background-color: black;
   color: white;
@@ -48,23 +49,36 @@
   display: flex;
   flex-direction: row;
   justify-content: center;
-  margin-top: 95px;
+  margin-top: 115px;
   background-color: black;
   color: white;
 }
 
-#canvas {
+#canvas_container {
     padding: 10px;
-    /* background-color: red; */
 }
 
 #frame_panel {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding-top: 10px;
   padding-left: 20px;
   width: 500px;
 }
+
+#frame_panel > * {
+  margin-bottom: 10px;
+}
+
+#maze_bar {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
 
 footer {
   margin: 20px;
