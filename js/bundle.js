@@ -174,8 +174,7 @@ var Maze = /*#__PURE__*/function () {
     this.startMazeBuilderEvents();
     this.solving = false;
     this.solve = 0;
-    this.delay = 50;
-    (0,_util__WEBPACK_IMPORTED_MODULE_0__.createTextDiv)("frame_panel", "algo_text", ""); // protecting callbacks
+    this.delay = 50; // protecting callbacks
 
     this.drawSquare = this.drawSquare.bind(this);
     this.conditionalDrawSquare = this.conditionalDrawSquare.bind(this);
@@ -892,7 +891,7 @@ function createTextDiv(parentId, id, text) {
 }
 function removeElement(id) {
   var element = document.getElementById(id);
-  element.parentNode.removeChild(element);
+  if (element) element.parentNode.removeChild(element);
 } // DSA utilities
 
 var Queue = /*#__PURE__*/function () {
