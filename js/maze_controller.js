@@ -40,11 +40,14 @@ export class MazeController {
     switch (mode) {
       case CREATE_MAZE_MODE:
         if (this.canvas) {
-          removeElement("canvas");        
+          removeElement("canvas_container");        
         }
-        createElement("frame_elements", "canvas", "canvas");
-        this.canvas = document.getElementById("canvas");
-        this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"))
+        let canvasContainer = createElement("frame_elements", "div", "canvas_container");
+        this.canvas = createElement("canvas_container", "canvas", "canvas");
+        // export function createElement(parentId, element, id, options = {}) {
+
+        // this.canvas = document.getElementById("canvas");
+        canvasContainer.parentNode.insertBefore(canvasContainer, document.getElementById("frame_panel"))
         this.maze = new Maze(30, 30, this.canvas);
         this.maze.draw();
 

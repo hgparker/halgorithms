@@ -707,12 +707,14 @@ var MazeController = /*#__PURE__*/function () {
       switch (mode) {
         case CREATE_MAZE_MODE:
           if (this.canvas) {
-            (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas");
+            (0,_util__WEBPACK_IMPORTED_MODULE_1__.removeElement)("canvas_container");
           }
 
-          (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_elements", "canvas", "canvas");
-          this.canvas = document.getElementById("canvas");
-          this.canvas.parentNode.insertBefore(this.canvas, document.getElementById("frame_panel"));
+          var canvasContainer = (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("frame_elements", "div", "canvas_container");
+          this.canvas = (0,_util__WEBPACK_IMPORTED_MODULE_1__.createElement)("canvas_container", "canvas", "canvas"); // export function createElement(parentId, element, id, options = {}) {
+          // this.canvas = document.getElementById("canvas");
+
+          canvasContainer.parentNode.insertBefore(canvasContainer, document.getElementById("frame_panel"));
           this.maze = new _maze__WEBPACK_IMPORTED_MODULE_0__.Maze(30, 30, this.canvas);
           this.maze.draw();
           (0,_util__WEBPACK_IMPORTED_MODULE_1__.createTextDiv)("frame_panel", "create_maze_text", _maze_text__WEBPACK_IMPORTED_MODULE_2__.createMazeText);
